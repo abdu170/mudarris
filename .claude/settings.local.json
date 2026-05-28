@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e \"const {NextResponse} = require\\('./node_modules/next/dist/server/web/exports/index.js'\\); console.log\\('NextResponse available:', typeof NextResponse\\);\")",
+      "Bash(node -e \"const pkg = require\\('./node_modules/next/dist/server/web/exports/index.js'\\); console.log\\(Object.keys\\(pkg\\).join\\('\\\\n'\\)\\);\")",
+      "Bash(npm install *)",
+      "Bash(npm audit *)",
+      "Bash(node -e ' *)",
+      "Bash(Get-ChildItem -Recurse \"c:\\\\Users\\\\Pc\\\\Desktop\\\\mudarris\\\\mudarris-web\\\\src\" -Include \"*.tsx\",\"*.ts\")",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(Sort-Object)",
+      "Bash(npx tsc *)",
+      "Bash(node -e \"const pkg = require\\('./node_modules/@supabase/supabase-js/package.json'\\); console.log\\(pkg.version\\)\")",
+      "Bash(node -e \"const pkg = require\\('./node_modules/@supabase/ssr/package.json'\\); console.log\\(pkg.version\\)\")",
+      "Bash(node -e \"const types = require\\('./node_modules/@supabase/supabase-js/dist/module/index.js'\\); \")",
+      "Bash(find src *)",
+      "Bash(ls src/lib/)"
+    ]
+  }
+}
