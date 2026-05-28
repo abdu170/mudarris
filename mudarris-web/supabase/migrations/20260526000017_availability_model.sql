@@ -133,7 +133,7 @@ BEGIN
 END;
 $$;
 
-COMMENT ON FUNCTION public.check_booking_conflict IS
+COMMENT ON FUNCTION public.check_booking_conflict(UUID, TIMESTAMPTZ, TIMESTAMPTZ) IS
   'Application-level overlap check with SELECT FOR UPDATE. DB exclusion constraint (bookings_no_tutor_overlap) is the final safety net.';
 
 -- ─── New RPC: get_tutor_available_slots ──────────────────────────────────────

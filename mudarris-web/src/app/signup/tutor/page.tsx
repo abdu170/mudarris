@@ -8,7 +8,7 @@ import { Select } from "@/components/ui/Select";
 import { Textarea } from "@/components/ui/Textarea";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
-import { SUBJECTS, GRADE_LEVELS, AREAS } from "@/lib/mock/tutors";
+import { SUBJECTS, GRADE_LEVELS, AREAS } from "@/lib/constants";
 import { tutorSignupAction } from "@/lib/actions/auth";
 
 const STEPS = [

@@ -344,3 +344,39 @@ export async function updateCommissionAction(pct: number): Promise<ActionResult>
   await logAdminAction(adminId, "update_commission", "platform_settings", "commission_pct", { new_pct: pct } as any);
   return { data: undefined };
 }
+
+// ─── Admin: suspend a user ────────────────────────────────────────────────────
+
+export async function suspendUserAction(
+  userId: string,
+  reason: string,
+): Promise<ActionResult<void>> {
+  const user = await requireAuth();
+  if (user.app_metadata?.role !== "admin") return { error: "غير مصرح" };
+  if (userId === user.id) return { error: "لا يمكنك إيقاف حسابك الخاص" };
+
+  const admin = createAdminClient();
+
+  // Set is_active = false — immediately blocks messages, bookings, withdrawals
+  const { error } = await admin
+    .from("users")
+    .update({ is_active: false })
+    .eq("id", userId);
+
+  if (error) {
+    console.error("[suspendUser]", error.message);
+    return { error: "تعذّر إيقاف الحساب" };
+  }
+
+  // Audit log
+  await admin.from("admin_audit_logs").insert({
+    admin_id: user.id,
+    action_type: "suspend_user",
+    target_entity: "users",
+    target_entity_id: userId,
+    metadata: { reason },
+  });
+
+  return { data: undefined };
+}
+

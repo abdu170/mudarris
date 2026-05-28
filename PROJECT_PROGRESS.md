@@ -919,5 +919,37 @@ To implement the AI phase:
 
 ---
 
+## Safe Redundancy & Duplicate Cleanup ✅ COMPLETED (2026-05-29)
+
+A comprehensive, safe cleanup of duplicates and redundant code was performed following approved actions:
+
+1. **Dead Mock Data Removal**:
+   - Deleted `src/lib/mock/data.ts` (100% dead file).
+
+2. **Constants Refactoring**:
+   - Created `src/lib/constants.ts` with lookup arrays: `SUBJECTS`, `GRADE_LEVELS`, and `AREAS`.
+   - Updated imports across `signup/student/page.tsx`, `signup/tutor/page.tsx`, `tutor/profile/edit/page.tsx`, `tutors/page.tsx`, and `components/home/HeroSection.tsx`.
+   - Safely deleted `src/lib/mock/tutors.ts` after verifying zero imports remained.
+
+3. **Database Schema Cleanup**:
+   - Added `supabase/migrations/20260529000024_cleanup_obsolete_rpcs.sql` to drop only the legacy 4-parameter `check_booking_conflict` RPC function (the slot-based version) safely without modifying migration history.
+   - **Migration Deployment Patches**:
+     - Corrected `20260526000017_availability_model.sql` at line 136 to specify the exact signature `public.check_booking_conflict(UUID, TIMESTAMPTZ, TIMESTAMPTZ)` for `COMMENT ON FUNCTION`, resolving the PostgreSQL overloaded function name ambiguity.
+     - Corrected `20260528000021_chat_enhancements.sql` at lines 102 and 114 to use the correct existing trigger function `public.set_updated_at()` instead of the invalid reference `trigger_set_updated_at()`.
+   - **Successful DB Deployment**: Executed `supabase db push` successfully deploying all **24 migrations** to the remote database. Verified via `supabase migration list` that 100% of migrations are active and synchronized.
+
+4. **Admin Action Refactor**:
+   - Relocated `suspendUserAction` from `src/lib/actions/messages.ts` to `src/lib/actions/admin.ts`.
+   - Updated all client imports in `AdminMessagesClient.tsx` and `AdminReportsClient.tsx`.
+
+*All cleanup tasks completed successfully. 100% type-safe verified via TypeScript compiler.*
+
+5. **Static Generation Build Resolution**:
+   - Wrapped `LoginPage` and `TutorsPage` inside standard React `<Suspense>` boundaries.
+   - Resolved the Next.js `useSearchParams()` CSR bailout issue which previously blocked production compilation.
+   - Successfully compiled the production build with **100% static page prerendering optimization** passing.
+
+---
+
 ## Phase 8 — Admin Tools, Error Boundaries & Security Hardening ⏳ AWAITING APPROVAL
 ## Phase 9 — Final Deliverables ⏳ AWAITING APPROVAL

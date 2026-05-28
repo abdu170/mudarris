@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/Textarea";
 import { Select } from "@/components/ui/Select";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
-import { SUBJECTS, GRADE_LEVELS, AREAS } from "@/lib/mock/tutors";
+import { SUBJECTS, GRADE_LEVELS, AREAS } from "@/lib/constants";
 
 export default function TutorProfileEditPage() {
   const [saved, setSaved] = useState(false);

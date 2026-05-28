@@ -8,9 +8,9 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { Tabs } from "@/components/ui/Tabs";
 import {
   updateReportStatusAction,
-  suspendUserAction,
   type UserReportItem,
 } from "@/lib/actions/messages";
+import { suspendUserAction } from "@/lib/actions/admin";
 import type { UserReportStatus } from "@/lib/supabase/types";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { SlidersHorizontal, X } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
@@ -10,8 +10,7 @@ import { TutorCardSkeleton } from "@/components/ui/Skeleton";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Select } from "@/components/ui/Select";
 import { Button } from "@/components/ui/Button";
-import { Chip } from "@/components/ui/Badge";
-import { SUBJECTS, GRADE_LEVELS, AREAS } from "@/lib/mock/tutors";
+import { SUBJECTS, GRADE_LEVELS, AREAS } from "@/lib/constants";
 import { getTutorsAction, type TutorListItem } from "@/lib/actions/tutors";
 import { cn } from "@/lib/utils";
 
@@ -37,7 +36,7 @@ const GENDER_OPTIONS = [
   { value: "female", label: "مدرسة" },
 ];
 
-export default function TutorsPage() {
+function TutorsContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -284,5 +283,21 @@ export default function TutorsPage() {
 
       <Footer />
     </>
+  );
+}
+
+export default function TutorsPage() {
+  return (
+    <Suspense fallback={
+      <>
+        <Navbar />
+        <main className="min-h-screen bg-[var(--color-brand-cream)] flex items-center justify-center">
+          <span className="text-body-md text-[var(--color-text-muted)]">جاري التحميل...</span>
+        </main>
+        <Footer />
+      </>
+    }>
+      <TutorsContent />
+    </Suspense>
   );
 }

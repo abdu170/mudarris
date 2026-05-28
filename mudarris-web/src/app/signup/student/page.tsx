@@ -6,7 +6,7 @@ import { BookOpen } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 import { Button } from "@/components/ui/Button";
-import { GRADE_LEVELS } from "@/lib/mock/tutors";
+import { GRADE_LEVELS } from "@/lib/constants";
 import { studentSignupAction } from "@/lib/actions/auth";
 
 const CURRICULA = [

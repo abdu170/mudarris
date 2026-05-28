@@ -99,7 +99,7 @@ CREATE POLICY "messages_select"
 -- ─── 6. Trigger: updated_at on user_reports ──────────────────────────────────
 CREATE TRIGGER set_user_reports_updated_at
   BEFORE UPDATE ON user_reports
-  FOR EACH ROW EXECUTE FUNCTION trigger_set_updated_at();
+  FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
 
 -- ─── 7. Trigger: updated_at on conversations (if not already set) ────────────
 -- conversations already has updated_at; ensure trigger exists.
@@ -111,7 +111,7 @@ DO $$ BEGIN
   ) THEN
     CREATE TRIGGER set_conversations_updated_at
       BEFORE UPDATE ON conversations
-      FOR EACH ROW EXECUTE FUNCTION trigger_set_updated_at();
+      FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
   END IF;
 END $$;
 

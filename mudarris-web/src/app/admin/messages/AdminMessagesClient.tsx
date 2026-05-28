@@ -9,11 +9,11 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import {
   getMessagesAction,
   adminHideMessageAction,
-  suspendUserAction,
   reactivateUserAction,
   type AdminConversationItem,
   type MessageItem,
 } from "@/lib/actions/messages";
+import { suspendUserAction } from "@/lib/actions/admin";
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleString("ar-QA", {

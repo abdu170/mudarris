@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Search, ChevronDown } from "lucide-react";
-import { SUBJECTS, GRADE_LEVELS } from "@/lib/mock/tutors";
+import { SUBJECTS, GRADE_LEVELS } from "@/lib/constants";
 import { Button } from "@/components/ui/Button";
 
 export function HeroSection() {
