@@ -5,6 +5,10 @@ import { HowItWorksSection } from "@/components/home/HowItWorksSection";
 import { FeaturedTutorsSection } from "@/components/home/FeaturedTutorsSection";
 import { BenefitsSection } from "@/components/home/BenefitsSection";
 import { CTASection } from "@/components/home/CTASection";
+import {
+  TestingBanner,
+  SHOW_TESTING_BANNER,
+} from "@/components/common/TestingBanner";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -16,6 +20,7 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <>
+      {SHOW_TESTING_BANNER && <TestingBanner />}
       <Navbar />
       <main>
         <HeroSection />
