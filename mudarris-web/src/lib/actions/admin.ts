@@ -94,7 +94,7 @@ export async function getAdminTutorsAction(
   const admin = createAdminClient();
   const base = admin
     .from("tutors")
-    .select(`id, status, subjects, is_visible, rating, created_at, users!inner ( full_name_ar, avatar_url )`)
+    .select(`id, status, subjects, is_visible, rating, created_at, users!tutors_id_fkey!inner ( full_name_ar, avatar_url )`)
     .order("created_at", { ascending: false });
 
   const { data, error } = await (status ? base.eq("status", status) : base);

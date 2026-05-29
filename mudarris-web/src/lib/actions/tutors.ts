@@ -64,7 +64,7 @@ export async function getTutorsAction(
       hourly_rate,
       rating,
       review_count,
-      users!inner ( full_name_ar, avatar_url )
+      users!tutors_id_fkey!inner ( full_name_ar, avatar_url )
     `)
     .eq("status", "approved")
     .eq("is_visible", true);
@@ -137,7 +137,7 @@ export async function getTutorProfileAction(
       rating,
       review_count,
       years_experience,
-      users!inner ( full_name_ar, avatar_url )
+      users!tutors_id_fkey!inner ( full_name_ar, avatar_url )
     `)
     .eq("id", tutorId)
     .eq("status", "approved")
