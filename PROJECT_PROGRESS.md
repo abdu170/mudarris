@@ -951,5 +951,38 @@ A comprehensive, safe cleanup of duplicates and redundant code was performed fol
 
 ---
 
+## Vercel 404 Hotfix ✅ COMPLETED (2026-05-29) — Commit `c1b4f37`
+
+### Root Cause
+
+All production routes returned Vercel `404 NOT_FOUND` despite a successful build (37 pages generated, Status: Ready). The deployment at commit `fb61583` was affected.
+
+**Cause:** Next.js 16 deprecated the `middleware.ts` file convention in v16.0.0 in favour of `proxy.ts`. The project was still using `src/middleware.ts` with `export function middleware`. The build emitted:
+
+```
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead.
+```
+
+When the deprecated convention is used, Next.js 16 generates a malformed Vercel routing manifest. Vercel builds succeed (pages are emitted to `.next/`) but the routing layer cannot map any incoming URL to any page — every route returns 404.
+
+### Fix Applied
+
+| Action | Detail |
+|---|---|
+| Deleted | `src/middleware.ts` |
+| Created | `src/proxy.ts` |
+| Renamed export | `export function middleware` → `export function proxy` |
+| Logic changes | **Zero** — same auth, same matcher, same Supabase session refresh |
+| TypeScript | `npx tsc --noEmit`: 0 errors |
+| Commit | `c1b4f37` on `main` |
+
+### Impact
+
+- All 37 Vercel-generated routes became reachable after deploy
+- Protected routes (`/student/*`, `/tutor/*`, `/admin/*`) continue to require authentication
+- Public routes (`/`, `/login`, `/signup/*`, `/tutors`, etc.) unaffected by the proxy
+
+---
+
 ## Phase 8 — Admin Tools, Error Boundaries & Security Hardening ⏳ AWAITING APPROVAL
 ## Phase 9 — Final Deliverables ⏳ AWAITING APPROVAL

@@ -2,7 +2,7 @@
 
 ## Mudarris — Production Readiness Checklist
 
-Last updated: 2026-05-28
+Last updated: 2026-05-29
 
 ---
 
@@ -80,7 +80,14 @@ Last updated: 2026-05-28
 - [ ] `SUPABASE_SERVICE_ROLE_KEY` not in any client bundle (verify with `npm run build`)
 - [ ] Run `npm audit` and review critical/high severity vulnerabilities
 
-### 7. Performance
+### 7. Next.js 16 File Conventions
+
+- [x] `src/proxy.ts` exists (NOT `src/middleware.ts`) — **required for Vercel routing to work in Next.js 16**
+  - Next.js 16 renamed the middleware file convention to `proxy`. Using the old `middleware.ts` causes Vercel to generate a malformed routing manifest even when the build succeeds (all routes return 404).
+  - Export must be `export function proxy(request: NextRequest)` (not `export function middleware`)
+  - Fixed in commit `c1b4f37` — this must remain `proxy.ts` for all future deployments
+
+### 8. Performance
 
 - [ ] `npm run build` succeeds with 0 TypeScript errors
 - [ ] Bundle size reviewed — no unintended large imports in client components

@@ -17,6 +17,7 @@ mudarris-web/out/
 .env.test
 .env*.local
 .env*
+!.env.example
 
 # Logs
 logs/
