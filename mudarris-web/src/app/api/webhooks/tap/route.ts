@@ -88,6 +88,11 @@ export async function POST(req: NextRequest): Promise<Response> {
 
   // Verify signature
   const env = getServerEnv();
+  if (!env.TAP_WEBHOOK_SECRET) {
+    console.error("[TapWebhook] TAP_WEBHOOK_SECRET is not configured.");
+    return new Response("Unauthorized", { status: 401 });
+  }
+
   if (!verifyTapSignature(payload, env.TAP_WEBHOOK_SECRET)) {
     console.warn("[TapWebhook] Signature verification failed for charge:", payload.id);
     return new Response("Unauthorized", { status: 401 });

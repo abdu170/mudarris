@@ -37,6 +37,10 @@ async function callMerithubCreateSession(params: {
 }): Promise<{ sessionId: string; studentJoinUrl: string; tutorJoinUrl: string }> {
   const env = getServerEnv();
 
+  if (!env.MERITHUB_API_KEY || !env.MERITHUB_BASE_URL) {
+    throw new Error("Merithub integration is not configured yet (MERITHUB_API_KEY or MERITHUB_BASE_URL is missing).");
+  }
+
   const res = await fetch(`${env.MERITHUB_BASE_URL}/v1/sessions`, {
     method: "POST",
     headers: {

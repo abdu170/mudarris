@@ -11,25 +11,26 @@ const publicSchema = z.object({
 
 const serverSchema = z.object({
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(1, "SUPABASE_SERVICE_ROLE_KEY is required"),
-  SUPABASE_JWT_SECRET: z.string().min(1, "SUPABASE_JWT_SECRET is required"),
+  
+  // Optional until integration is configured
+  SUPABASE_JWT_SECRET: z.string().optional(),
 
-  TAP_SECRET_KEY: z.string().min(1, "TAP_SECRET_KEY is required"),
-  TAP_PUBLISHABLE_KEY: z.string().min(1, "TAP_PUBLISHABLE_KEY is required"),
-  TAP_WEBHOOK_SECRET: z.string().min(1, "TAP_WEBHOOK_SECRET is required"),
+  TAP_SECRET_KEY: z.string().optional(),
+  TAP_PUBLISHABLE_KEY: z.string().optional(),
+  TAP_WEBHOOK_SECRET: z.string().optional(),
 
-  RESEND_API_KEY: z.string().min(1, "RESEND_API_KEY is required"),
-  RESEND_FROM_EMAIL: z.string().email("RESEND_FROM_EMAIL must be a valid email"),
+  RESEND_API_KEY: z.string().optional(),
+  RESEND_FROM_EMAIL: z.string().optional(),
 
-  MERITHUB_API_KEY: z.string().min(1, "MERITHUB_API_KEY is required"),
-  MERITHUB_BASE_URL: z.string().url("MERITHUB_BASE_URL must be a valid URL"),
-  // MERITHUB_WEBHOOK_SECRET: verify Merithub webhook signatures (optional for sandbox)
-  MERITHUB_WEBHOOK_SECRET: z.string().min(1).optional(),
+  MERITHUB_API_KEY: z.string().optional(),
+  MERITHUB_BASE_URL: z.string().optional(),
+  MERITHUB_WEBHOOK_SECRET: z.string().optional(),
 
   // AI-ready: Gemini API key (optional — not used until AI phase is approved)
-  GEMINI_API_KEY: z.string().min(1).optional(),
+  GEMINI_API_KEY: z.string().optional(),
 
-  UPSTASH_REDIS_REST_URL: z.string().url("UPSTASH_REDIS_REST_URL must be a valid URL").optional(),
-  UPSTASH_REDIS_REST_TOKEN: z.string().min(1).optional(),
+  UPSTASH_REDIS_REST_URL: z.string().optional(),
+  UPSTASH_REDIS_REST_TOKEN: z.string().optional(),
 });
 
 function validatePublicEnv() {

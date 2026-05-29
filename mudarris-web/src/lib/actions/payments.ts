@@ -43,6 +43,10 @@ async function createTapCharge(params: {
 }): Promise<{ chargeId: string; checkoutUrl: string }> {
   const env = getServerEnv();
 
+  if (!env.TAP_SECRET_KEY) {
+    throw new Error("Tap Payment integration is not configured yet (TAP_SECRET_KEY is missing).");
+  }
+
   const body = {
     amount: params.amount,
     currency: params.currency,
