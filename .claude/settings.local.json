@@ -14,7 +14,8 @@
       "Bash(node -e \"const pkg = require\\('./node_modules/@supabase/ssr/package.json'\\); console.log\\(pkg.version\\)\")",
       "Bash(node -e \"const types = require\\('./node_modules/@supabase/supabase-js/dist/module/index.js'\\); \")",
       "Bash(find src *)",
-      "Bash(ls src/lib/)"
+      "Bash(ls src/lib/)",
+      "Bash(git push *)"
     ]
   }
 }

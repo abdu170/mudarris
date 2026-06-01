@@ -74,6 +74,11 @@
   --shadow-card-hover: 0 4px 12px rgba(128, 0, 32, 0.10), 0 2px 4px rgba(128, 0, 32, 0.06);
   --shadow-modal: 0 20px 40px rgba(0, 0, 0, 0.15);
   --shadow-nav:   0 1px 0 rgba(0,0,0,0.06);
+
+  /* ── Aliases — fix undefined token references in legacy code ─ */
+  --color-border:          #e0bfbf;   /* alias → --color-outline-soft */
+  --color-primary:         #570013;   /* alias → --color-brand-primary */
+  --color-surface:         #fbf9f5;   /* alias → --color-brand-cream   */
 }
 
 /* ============================================================
@@ -111,10 +116,12 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.3;
 }
 
-/* Links */
-a {
-  color: inherit;
-  text-decoration: none;
+/* Links — wrapped in @layer base so Tailwind utilities (e.g. text-white on Button asChild) take precedence */
+@layer base {
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 }
 
 /* Images */

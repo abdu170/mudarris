@@ -53,7 +53,7 @@ export default function StudentWalletClient({ payments }: Props) {
 
       {/* Payment history */}
       <div className="card">
-        <div className="p-5 border-b border-[var(--color-border)]">
+        <div className="p-5 border-b border-[var(--color-outline-soft)]">
           <h2 className="text-headline-sm">سجل المدفوعات</h2>
         </div>
         {payments.length === 0 ? (
@@ -61,7 +61,7 @@ export default function StudentWalletClient({ payments }: Props) {
             <p className="text-label-md text-[var(--color-text-muted)]">لا توجد مدفوعات بعد</p>
           </div>
         ) : (
-          <div className="divide-y divide-[var(--color-border)]">
+          <div className="divide-y divide-[var(--color-outline-soft)]">
             {payments.map((p) => (
               <div key={p.id} className="flex items-center justify-between gap-4 px-5 py-4">
                 <div className="flex items-center gap-3">

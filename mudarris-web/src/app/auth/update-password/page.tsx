@@ -41,24 +41,24 @@ export default function UpdatePasswordPage() {
             <div className="w-10 h-10 rounded-[var(--radius-md)] bg-[var(--color-brand-primary)] flex items-center justify-center">
               <BookOpen className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold text-[var(--color-text-primary)]">مدرّس</span>
+            <span className="text-headline-md font-bold text-[var(--color-brand-primary)]">مُدرّس</span>
           </Link>
-          <h1 className="text-2xl font-bold text-[var(--color-text-primary)]">تعيين كلمة مرور جديدة</h1>
-          <p className="text-[var(--color-text-secondary)] mt-2">أدخل كلمة المرور الجديدة لحسابك</p>
+          <h1 className="text-headline-lg text-[var(--color-text-main)]">تعيين كلمة مرور جديدة</h1>
+          <p className="text-body-md text-[var(--color-text-muted)] mt-2">أدخل كلمة المرور الجديدة لحسابك</p>
         </div>
 
-        <div className="bg-white rounded-[var(--radius-lg)] p-8 shadow-sm border border-[var(--color-border)]">
+        <div className="card p-8">
           {success ? (
             <div className="text-center">
-              <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
-                <svg className="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="w-12 h-12 rounded-full bg-[var(--color-success-container)] flex items-center justify-center mx-auto mb-4">
+                <svg className="w-6 h-6 text-[var(--color-success)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h2 className="text-lg font-semibold text-[var(--color-text-primary)] mb-2">
+              <h2 className="text-headline-sm text-[var(--color-text-main)] mb-2">
                 تم تحديث كلمة المرور
               </h2>
-              <p className="text-[var(--color-text-secondary)] mb-6">
+              <p className="text-body-md text-[var(--color-text-muted)] mb-6">
                 يمكنك الآن تسجيل الدخول بكلمة المرور الجديدة
               </p>
               <Link href="/login">
@@ -68,13 +68,13 @@ export default function UpdatePasswordPage() {
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               {error && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded-[var(--radius-md)] text-red-700 text-sm text-right">
+                <div className="p-3 bg-[var(--color-error-container)] border border-[var(--color-error)] rounded-[var(--radius-md)] text-[var(--color-error)] text-sm text-right">
                   {error}
                 </div>
               )}
 
               <div>
-                <label className="block text-sm font-medium text-[var(--color-text-primary)] mb-1 text-right">
+                <label className="block text-label-md font-medium text-[var(--color-text-main)] mb-1 text-right">
                   كلمة المرور الجديدة
                 </label>
                 <Input
@@ -89,7 +89,7 @@ export default function UpdatePasswordPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[var(--color-text-primary)] mb-1 text-right">
+                <label className="block text-label-md font-medium text-[var(--color-text-main)] mb-1 text-right">
                   تأكيد كلمة المرور
                 </label>
                 <Input
