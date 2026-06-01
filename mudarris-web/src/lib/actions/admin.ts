@@ -118,6 +118,46 @@ export async function getAdminTutorsAction(
   return { data: tutors };
 }
 
+export type AdminTutorDocument = {
+  id: string;
+  fileName: string;
+  documentType: string;
+  signedUrl: string;
+};
+
+export async function getAdminTutorDocumentsAction(
+  tutorId: string,
+): Promise<ActionResult<AdminTutorDocument[]>> {
+  try { await requireAdmin(); } catch { return { error: "غير مصرح" }; }
+
+  const admin = createAdminClient();
+  const { data, error } = await admin
+    .from("tutor_documents")
+    .select("id, file_name, document_type, storage_path")
+    .eq("tutor_id", tutorId)
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    console.error("[getAdminTutorDocuments]", error.message);
+    return { error: "تعذّر تحميل وثائق المدرس" };
+  }
+
+  const docs: AdminTutorDocument[] = [];
+  for (const doc of data ?? []) {
+    const { data: urlData } = await admin.storage
+      .from("tutor-documents")
+      .createSignedUrl((doc as any).storage_path, 3600);
+    docs.push({
+      id: (doc as any).id,
+      fileName: (doc as any).file_name,
+      documentType: (doc as any).document_type,
+      signedUrl: urlData?.signedUrl ?? "",
+    });
+  }
+
+  return { data: docs };
+}
+
 export async function approveTutorAction(tutorId: string): Promise<ActionResult> {
   let adminId: string;
   try { ({ id: adminId } = await requireAdmin()); } catch { return { error: "غير مصرح" }; }

@@ -193,6 +193,12 @@ export async function tutorSignupAction(formData: FormData): Promise<AuthActionR
   if (subjects.length === 0) return { error: "يرجى اختيار مادة دراسية واحدة على الأقل" };
   if (gradeLevels.length === 0) return { error: "يرجى اختيار مرحلة دراسية واحدة على الأقل" };
 
+  // Require at least one academic certificate before creating the account
+  const primaryAcademicCert = formData.get("doc_academic_certificate") as File | null;
+  if (!primaryAcademicCert || primaryAcademicCert.size === 0) {
+    return { error: "الشهادة الأكاديمية مطلوبة" };
+  }
+
   const d = parsed.data;
   const supabase = await createClient();
 
@@ -244,8 +250,14 @@ export async function tutorSignupAction(formData: FormData): Promise<AuthActionR
   const docFields: Array<{ key: string; type: string }> = [
     { key: "doc_national_id", type: "national_id" },
     { key: "doc_academic_certificate", type: "academic_certificate" },
-    { key: "doc_teaching_certificate", type: "teaching_certificate" },
   ];
+  // Additional certificates uploaded via the dynamic "+ إضافة شهادة أخرى" UI
+  for (let i = 0; i < 10; i++) {
+    const key = `doc_additional_certificate_${i}`;
+    const file = formData.get(key) as File | null;
+    if (!file || file.size === 0) break;
+    docFields.push({ key, type: "additional_certificate" });
+  }
 
   for (const { key, type } of docFields) {
     const file = formData.get(key) as File | null;

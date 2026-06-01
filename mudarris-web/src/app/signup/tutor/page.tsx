@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import Link from "next/link";
-import { BookOpen, Check } from "lucide-react";
+import { BookOpen, Check, Plus, X } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 import { Textarea } from "@/components/ui/Textarea";
@@ -18,6 +18,11 @@ const STEPS = [
   { label: "الوثائق",          number: 4 },
 ];
 
+interface CertSlot {
+  id: number;
+  file: File | null;
+}
+
 export default function TutorSignupPage() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -29,13 +34,15 @@ export default function TutorSignupPage() {
     bio: "", teachingMode: "", areas: [] as string[], hourlyPrice: "",
     curriculum: [] as string[], documents: [] as File[],
   });
+
   const [docNationalId, setDocNationalId]     = useState<File | null>(null);
   const [docAcademicCert, setDocAcademicCert] = useState<File | null>(null);
-  const [docTeachingCert, setDocTeachingCert] = useState<File | null>(null);
+  const [additionalCerts, setAdditionalCerts] = useState<CertSlot[]>([]);
 
-  const refNationalId    = useRef<HTMLInputElement>(null);
-  const refAcademicCert  = useRef<HTMLInputElement>(null);
-  const refTeachingCert  = useRef<HTMLInputElement>(null);
+  const refNationalId   = useRef<HTMLInputElement>(null);
+  const refAcademicCert = useRef<HTMLInputElement>(null);
+  const additionalCertRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const nextCertId = useRef(0);
 
   function update(key: string, value: unknown) {
     setForm((f) => ({ ...f, [key]: value }));
@@ -48,9 +55,27 @@ export default function TutorSignupPage() {
     });
   }
 
+  function addCertSlot() {
+    const id = nextCertId.current++;
+    setAdditionalCerts((prev) => [...prev, { id, file: null }]);
+  }
+
+  function removeCertSlot(id: number) {
+    setAdditionalCerts((prev) => prev.filter((c) => c.id !== id));
+  }
+
+  function setCertFile(id: number, file: File | null) {
+    setAdditionalCerts((prev) => prev.map((c) => (c.id === id ? { ...c, file } : c)));
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (step < 4) { setStep((s) => s + 1); return; }
+
+    if (!docAcademicCert) {
+      setError("يجب رفع الشهادة الأكاديمية");
+      return;
+    }
 
     setLoading(true);
     setError(null);
@@ -63,7 +88,6 @@ export default function TutorSignupPage() {
     fd.append("password", form.password);
     fd.append("bio", form.bio);
     fd.append("experience", form.experience);
-    // Map UI value "in-person" → DB enum "in_person"
     fd.append("teachingMode", form.teachingMode === "in-person" ? "in_person" : form.teachingMode);
     fd.append("hourlyPrice", form.hourlyPrice);
     fd.append("subjects", form.subjects.join(","));
@@ -72,7 +96,10 @@ export default function TutorSignupPage() {
 
     if (docNationalId)   fd.append("doc_national_id", docNationalId);
     if (docAcademicCert) fd.append("doc_academic_certificate", docAcademicCert);
-    if (docTeachingCert) fd.append("doc_teaching_certificate", docTeachingCert);
+
+    additionalCerts.forEach((cert, index) => {
+      if (cert.file) fd.append(`doc_additional_certificate_${index}`, cert.file);
+    });
 
     const result = await tutorSignupAction(fd);
     if (result?.error) {
@@ -82,7 +109,6 @@ export default function TutorSignupPage() {
       setEmailSent(true);
       setLoading(false);
     }
-    // On success, server action redirects to /tutor/pending
   }
 
   const CheckboxGroup = ({ items, selected, onToggle }: { items: string[]; selected: string[]; onToggle: (v: string) => void }) => (
@@ -243,7 +269,9 @@ export default function TutorSignupPage() {
 
                     {/* National ID */}
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-label-md font-medium text-[var(--color-text-main)]">صورة الهوية الوطنية أو الإقامة</label>
+                      <label className="text-label-md font-medium text-[var(--color-text-main)]">
+                        صورة الهوية الوطنية أو الإقامة
+                      </label>
                       <div
                         className="border-2 border-dashed border-[var(--color-outline-soft)] rounded-[var(--radius-md)] p-6 text-center hover:border-[var(--color-brand-primary)] transition-colors cursor-pointer"
                         onClick={() => refNationalId.current?.click()}
@@ -266,11 +294,18 @@ export default function TutorSignupPage() {
                       </div>
                     </div>
 
-                    {/* Academic certificate */}
+                    {/* Primary academic certificate (required) */}
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-label-md font-medium text-[var(--color-text-main)]">الشهادات الأكاديمية</label>
+                      <label className="text-label-md font-medium text-[var(--color-text-main)]">
+                        الشهادة الأكاديمية <span className="text-[var(--color-error)]">*</span>
+                      </label>
                       <div
-                        className="border-2 border-dashed border-[var(--color-outline-soft)] rounded-[var(--radius-md)] p-6 text-center hover:border-[var(--color-brand-primary)] transition-colors cursor-pointer"
+                        className={cn(
+                          "border-2 border-dashed rounded-[var(--radius-md)] p-6 text-center transition-colors cursor-pointer",
+                          docAcademicCert
+                            ? "border-[var(--color-brand-primary)] hover:border-[var(--color-brand-primary)]"
+                            : "border-[var(--color-outline-soft)] hover:border-[var(--color-brand-primary)]"
+                        )}
                         onClick={() => refAcademicCert.current?.click()}
                       >
                         {docAcademicCert ? (
@@ -291,30 +326,54 @@ export default function TutorSignupPage() {
                       </div>
                     </div>
 
-                    {/* Teaching certificate (optional) */}
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-label-md font-medium text-[var(--color-text-main)]">شهادات التدريس (اختياري)</label>
-                      <div
-                        className="border-2 border-dashed border-[var(--color-outline-soft)] rounded-[var(--radius-md)] p-6 text-center hover:border-[var(--color-brand-primary)] transition-colors cursor-pointer"
-                        onClick={() => refTeachingCert.current?.click()}
-                      >
-                        {docTeachingCert ? (
-                          <p className="text-label-md text-[var(--color-brand-primary)] font-medium">{docTeachingCert.name}</p>
-                        ) : (
-                          <>
-                            <p className="text-label-md text-[var(--color-text-muted)]">اسحب الملف هنا أو انقر للاختيار</p>
-                            <p className="text-label-sm text-[var(--color-text-muted)] mt-1">إن وجدت</p>
-                          </>
-                        )}
-                        <input
-                          ref={refTeachingCert}
-                          type="file"
-                          className="hidden"
-                          accept=".pdf,.jpg,.jpeg,.png,.webp"
-                          onChange={(e) => setDocTeachingCert(e.target.files?.[0] ?? null)}
-                        />
+                    {/* Dynamic additional certificates */}
+                    {additionalCerts.map((cert, index) => (
+                      <div key={cert.id} className="flex flex-col gap-1.5">
+                        <div className="flex items-center justify-between">
+                          <label className="text-label-md font-medium text-[var(--color-text-main)]">
+                            شهادة إضافية {index + 1}
+                          </label>
+                          <button
+                            type="button"
+                            onClick={() => removeCertSlot(cert.id)}
+                            className="flex items-center gap-1 text-label-sm text-[var(--color-error)] hover:underline"
+                          >
+                            <X className="w-3.5 h-3.5" />
+                            حذف
+                          </button>
+                        </div>
+                        <div
+                          className="border-2 border-dashed border-[var(--color-outline-soft)] rounded-[var(--radius-md)] p-6 text-center hover:border-[var(--color-brand-primary)] transition-colors cursor-pointer"
+                          onClick={() => additionalCertRefs.current[index]?.click()}
+                        >
+                          {cert.file ? (
+                            <p className="text-label-md text-[var(--color-brand-primary)] font-medium">{cert.file.name}</p>
+                          ) : (
+                            <>
+                              <p className="text-label-md text-[var(--color-text-muted)]">اسحب الملف هنا أو انقر للاختيار</p>
+                              <p className="text-label-sm text-[var(--color-text-muted)] mt-1">PDF أو صورة</p>
+                            </>
+                          )}
+                          <input
+                            ref={(el) => { additionalCertRefs.current[index] = el; }}
+                            type="file"
+                            className="hidden"
+                            accept=".pdf,.jpg,.jpeg,.png,.webp"
+                            onChange={(e) => setCertFile(cert.id, e.target.files?.[0] ?? null)}
+                          />
+                        </div>
                       </div>
-                    </div>
+                    ))}
+
+                    {/* Add certificate button */}
+                    <button
+                      type="button"
+                      onClick={addCertSlot}
+                      className="flex items-center gap-2 text-label-md text-[var(--color-brand-primary)] hover:underline self-start"
+                    >
+                      <Plus className="w-4 h-4" />
+                      إضافة شهادة أخرى
+                    </button>
 
                     <label className="flex items-start gap-3 cursor-pointer mt-2">
                       <input type="checkbox" required className="mt-1 accent-[var(--color-brand-primary)]" />
