@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Menu, X, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import { cn } from "@/lib/utils";
+import { createClient } from "@/lib/supabase/browser";
+
+type NavUser = { role: string; dashboardHref: string; dashboardLabel: string } | null;
 
 const navLinks = [
   { href: "/tutors", label: "ابحث عن مدرس" },
@@ -12,8 +14,82 @@ const navLinks = [
   { href: "/signup/student", label: "انضم كطالب" },
 ];
 
+function resolveNavUser(role: string | undefined): NavUser {
+  if (role === "admin") return { role, dashboardHref: "/admin", dashboardLabel: "لوحة الإدارة" };
+  if (role === "tutor") return { role, dashboardHref: "/tutor/dashboard", dashboardLabel: "لوحتي" };
+  if (role === "student") return { role, dashboardHref: "/student/dashboard", dashboardLabel: "لوحتي" };
+  return null;
+}
+
+function DesktopAuthLinks({ navUser }: { navUser: NavUser | undefined }) {
+  // undefined = still loading; render nothing to avoid flash
+  if (navUser === undefined) return <div className="hidden md:flex w-40" />;
+
+  if (navUser) {
+    return (
+      <div className="hidden md:flex items-center gap-3">
+        <Button size="sm" asChild>
+          <Link href={navUser.dashboardHref}>{navUser.dashboardLabel}</Link>
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="hidden md:flex items-center gap-3">
+      <Button variant="ghost" size="sm" asChild>
+        <Link href="/login">تسجيل الدخول</Link>
+      </Button>
+      <Button size="sm" asChild>
+        <Link href="/signup/student">ابدأ الآن</Link>
+      </Button>
+    </div>
+  );
+}
+
+function MobileAuthLinks({ navUser, onClose }: { navUser: NavUser | undefined; onClose: () => void }) {
+  if (navUser === undefined) return null;
+
+  if (navUser) {
+    return (
+      <div className="border-t border-[var(--color-outline-soft)] mt-2 pt-3 flex flex-col gap-2">
+        <Button fullWidth asChild>
+          <Link href={navUser.dashboardHref} onClick={onClose}>{navUser.dashboardLabel}</Link>
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="border-t border-[var(--color-outline-soft)] mt-2 pt-3 flex flex-col gap-2">
+      <Button variant="secondary" fullWidth asChild>
+        <Link href="/login" onClick={onClose}>تسجيل الدخول</Link>
+      </Button>
+      <Button fullWidth asChild>
+        <Link href="/signup/student" onClick={onClose}>ابدأ الآن</Link>
+      </Button>
+    </div>
+  );
+}
+
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  // undefined = not yet resolved; null = logged out; object = logged in
+  const [navUser, setNavUser] = useState<NavUser | undefined>(undefined);
+
+  useEffect(() => {
+    const supabase = createClient();
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setNavUser(resolveNavUser(session?.user?.app_metadata?.role as string | undefined));
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setNavUser(resolveNavUser(session?.user?.app_metadata?.role as string | undefined));
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   return (
     <header className="sticky top-0 z-40 bg-[var(--color-surface-white)] border-b border-[var(--color-outline-soft)] shadow-[var(--shadow-nav)]">
@@ -43,14 +119,7 @@ export function Navbar() {
           </nav>
 
           {/* Auth buttons — left side in RTL */}
-          <div className="hidden md:flex items-center gap-3">
-            <Button variant="ghost" size="sm" asChild>
-              <Link href="/login">تسجيل الدخول</Link>
-            </Button>
-            <Button size="sm" asChild>
-              <Link href="/signup/student">ابدأ الآن</Link>
-            </Button>
-          </div>
+          <DesktopAuthLinks navUser={navUser} />
 
           {/* Mobile burger */}
           <button
@@ -77,14 +146,7 @@ export function Navbar() {
                 {link.label}
               </Link>
             ))}
-            <div className="border-t border-[var(--color-outline-soft)] mt-2 pt-3 flex flex-col gap-2">
-              <Button variant="secondary" fullWidth asChild>
-                <Link href="/login">تسجيل الدخول</Link>
-              </Button>
-              <Button fullWidth asChild>
-                <Link href="/signup/student">ابدأ الآن</Link>
-              </Button>
-            </div>
+            <MobileAuthLinks navUser={navUser} onClose={() => setMobileOpen(false)} />
           </nav>
         </div>
       )}
