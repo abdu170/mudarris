@@ -8,6 +8,7 @@ import {
   Calendar, FileText, BookMarked, UserCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { logoutAction } from "@/lib/actions/auth";
 
 /* ── Nav item definition ──────────────────────────────── */
 interface NavItem {
@@ -123,6 +124,7 @@ export function DashboardSidebar({ role, userName = "المستخدم" }: Dashbo
           استعراض المدرسين
         </Link>
         <button
+          onClick={() => logoutAction()}
           className="flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-sm)] text-label-md text-[var(--color-error)] hover:bg-[var(--color-error-container)] transition-colors w-full text-right"
         >
           <LogOut className="w-5 h-5" />
