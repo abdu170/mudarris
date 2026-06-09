@@ -30,6 +30,13 @@ export function TutorCard({ tutor, className }: TutorCardProps) {
             {getInitials(tutor.displayName)}
           </div>
         )}
+        {tutor.id.startsWith("a1000000") && (
+          <div className="absolute top-3 start-3">
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-black/50 text-white tracking-wide">
+              بيانات وهمية
+            </span>
+          </div>
+        )}
         {tutor.availableToday && (
           <div className="absolute top-3 end-3">
             <Badge variant="success">متاح اليوم</Badge>
