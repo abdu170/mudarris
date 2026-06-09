@@ -9,6 +9,7 @@ import {
   approveTutorAction,
   rejectTutorAction,
   suspendTutorAction,
+  unsuspendTutorAction,
   getAdminTutorDocumentsAction,
   type AdminTutorItem,
   type AdminTutorDocument,
@@ -29,9 +30,10 @@ import { formatQatarDate } from "@/lib/utils";
 interface Props {
   initialApproved: AdminTutorItem[];
   initialPending: AdminTutorItem[];
+  initialSuspended: AdminTutorItem[];
 }
 
-type ActionState = { type: "approve" | "reject" | "suspend"; tutorId: string };
+type ActionState = { type: "approve" | "reject" | "suspend" | "unsuspend"; tutorId: string };
 
 interface DocsModal {
   tutorId: string;
@@ -41,10 +43,11 @@ interface DocsModal {
   error: string | null;
 }
 
-export function AdminTutorsClient({ initialApproved, initialPending }: Props) {
+export function AdminTutorsClient({ initialApproved, initialPending, initialSuspended }: Props) {
   const [tutors, setTutors] = useState<AdminTutorItem[]>([
     ...initialApproved,
     ...initialPending,
+    ...initialSuspended,
   ]);
   const [action, setAction] = useState<ActionState | null>(null);
   const [processing, setProcessing] = useState(false);
@@ -53,6 +56,7 @@ export function AdminTutorsClient({ initialApproved, initialPending }: Props) {
 
   const approved = tutors.filter((t) => t.status === "approved");
   const pending = tutors.filter((t) => t.status === "pending");
+  const suspended = tutors.filter((t) => t.status === "suspended");
 
   async function execute() {
     if (!action) return;
@@ -62,6 +66,7 @@ export function AdminTutorsClient({ initialApproved, initialPending }: Props) {
     let res;
     if (action.type === "approve") res = await approveTutorAction(action.tutorId);
     else if (action.type === "reject") res = await rejectTutorAction(action.tutorId);
+    else if (action.type === "unsuspend") res = await unsuspendTutorAction(action.tutorId);
     else res = await suspendTutorAction(action.tutorId);
 
     setProcessing(false);
@@ -71,11 +76,12 @@ export function AdminTutorsClient({ initialApproved, initialPending }: Props) {
       if (action.type === "reject") {
         setTutors((prev) => prev.filter((t) => t.id !== action.tutorId));
       } else {
-        const nextStatus = action.type === "approve" ? "approved" : "suspended";
+        const nextStatus =
+          action.type === "approve" || action.type === "unsuspend" ? "approved" : "suspended";
         setTutors((prev) =>
           prev.map((t) =>
             t.id === action.tutorId
-              ? { ...t, status: nextStatus, isVisible: action.type === "approve" }
+              ? { ...t, status: nextStatus, isVisible: nextStatus === "approved" }
               : t,
           ),
         );
@@ -94,7 +100,7 @@ export function AdminTutorsClient({ initialApproved, initialPending }: Props) {
     }
   }
 
-  function TutorRow({ t, mode }: { t: AdminTutorItem; mode: "approve" | "suspend" }) {
+  function TutorRow({ t, mode }: { t: AdminTutorItem; mode: "approve" | "suspend" | "unsuspend" }) {
     return (
       <tr className="border-b border-[var(--color-outline-soft)] last:border-0 hover:bg-[var(--color-surface-low)] transition-colors">
         <td className="px-4 py-3">
@@ -127,6 +133,8 @@ export function AdminTutorsClient({ initialApproved, initialPending }: Props) {
                 <Button size="sm" onClick={() => setAction({ type: "approve", tutorId: t.id })}>قبول</Button>
                 <Button size="sm" variant="danger" onClick={() => setAction({ type: "reject", tutorId: t.id })}>رفض</Button>
               </>
+            ) : mode === "unsuspend" ? (
+              <Button size="sm" onClick={() => setAction({ type: "unsuspend", tutorId: t.id })}>رفع التعليق</Button>
             ) : (
               <Button size="sm" variant="danger" onClick={() => setAction({ type: "suspend", tutorId: t.id })}>تعليق</Button>
             )}
@@ -147,13 +155,16 @@ export function AdminTutorsClient({ initialApproved, initialPending }: Props) {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
           <div className="card p-6 max-w-sm w-full flex flex-col gap-4">
             <p className="text-label-lg font-semibold">
-              {action.type === "approve" ? "تأكيد قبول المدرس" : action.type === "reject" ? "تأكيد رفض المدرس" : "تأكيد تعليق المدرس"}
+              {action.type === "approve" ? "تأكيد قبول المدرس"
+               : action.type === "reject" ? "تأكيد رفض المدرس"
+               : action.type === "unsuspend" ? "تأكيد رفع التعليق"
+               : "تأكيد تعليق المدرس"}
             </p>
             {actionError && <p className="text-label-sm text-[var(--color-error)]">{actionError}</p>}
             <div className="flex gap-2 justify-end">
               <Button variant="ghost" onClick={() => { setAction(null); setActionError(null); }}>إلغاء</Button>
               <Button
-                variant={action.type === "approve" ? "primary" : "danger"}
+                variant={action.type === "approve" || action.type === "unsuspend" ? "primary" : "danger"}
                 onClick={execute}
                 loading={processing}
               >
@@ -268,6 +279,32 @@ export function AdminTutorsClient({ initialApproved, initialPending }: Props) {
                 </thead>
                 <tbody>
                   {pending.map((t) => <TutorRow key={t.id} t={t} mode="approve" />)}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+      </section>
+
+      <section>
+        <h2 className="text-headline-sm mb-4">المدرسون الموقوفون ({suspended.length})</h2>
+        {suspended.length === 0 ? (
+          <div className="card p-6 text-center">
+            <p className="text-body-md text-[var(--color-text-muted)]">لا يوجد مدرسون موقوفون</p>
+          </div>
+        ) : (
+          <div className="card overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="bg-[var(--color-surface-low)] border-b border-[var(--color-outline-soft)]">
+                    {COLS.map((h) => (
+                      <th key={h} className="text-right px-4 py-3 text-label-sm font-semibold text-[var(--color-text-muted)]">{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {suspended.map((t) => <TutorRow key={t.id} t={t} mode="unsuspend" />)}
                 </tbody>
               </table>
             </div>

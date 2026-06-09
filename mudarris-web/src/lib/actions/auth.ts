@@ -246,6 +246,26 @@ export async function tutorSignupAction(formData: FormData): Promise<AuthActionR
     return { error: "حدث خطأ في إنشاء الملف الشخصي. يرجى المحاولة مجدداً." };
   }
 
+  // Avatar upload (optional, public bucket)
+  const ALLOWED_AVATAR_MIMES = new Set(["image/jpeg", "image/png", "image/webp"]);
+  const MAX_AVATAR_BYTES = 2 * 1024 * 1024;
+  const avatarFile = formData.get("doc_avatar") as File | null;
+  if (avatarFile && avatarFile.size > 0 && ALLOWED_AVATAR_MIMES.has(avatarFile.type) && avatarFile.size <= MAX_AVATAR_BYTES) {
+    const avatarExtMap: Record<string, string> = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp" };
+    const avatarExt = avatarExtMap[avatarFile.type] ?? "jpg";
+    const avatarPath = `${userId}/avatar.${avatarExt}`;
+    const avatarBytes = await avatarFile.arrayBuffer();
+    const { error: avatarError } = await admin.storage
+      .from("avatars")
+      .upload(avatarPath, avatarBytes, { contentType: avatarFile.type, upsert: true });
+    if (!avatarError) {
+      const { data: { publicUrl } } = admin.storage.from("avatars").getPublicUrl(avatarPath);
+      await admin.from("users").update({ avatar_url: publicUrl }).eq("id", userId);
+    } else {
+      console.error("[tutorSignup] Avatar upload error:", avatarError.message);
+    }
+  }
+
   // Document uploads (server-side validation: MIME + size)
   const docFields: Array<{ key: string; type: string }> = [
     { key: "doc_national_id", type: "national_id" },
@@ -255,7 +275,7 @@ export async function tutorSignupAction(formData: FormData): Promise<AuthActionR
   for (let i = 0; i < 10; i++) {
     const key = `doc_additional_certificate_${i}`;
     const file = formData.get(key) as File | null;
-    if (!file || file.size === 0) break;
+    if (!file || file.size === 0) continue;
     docFields.push({ key, type: "additional_certificate" });
   }
 

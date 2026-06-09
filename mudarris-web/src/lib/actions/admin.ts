@@ -206,6 +206,22 @@ export async function suspendTutorAction(tutorId: string): Promise<ActionResult>
   return { data: undefined };
 }
 
+export async function unsuspendTutorAction(tutorId: string): Promise<ActionResult> {
+  let adminId: string;
+  try { ({ id: adminId } = await requireAdmin()); } catch { return { error: "غير مصرح" }; }
+
+  const admin = createAdminClient();
+  const { error } = await admin
+    .from("tutors")
+    .update({ status: "approved", is_visible: true })
+    .eq("id", tutorId);
+
+  if (error) { console.error("[unsuspendTutor]", error.message); return { error: "تعذّر رفع التعليق" }; }
+
+  await logAdminAction(adminId, "unsuspend_tutor", "tutors", tutorId);
+  return { data: undefined };
+}
+
 // ─── Bookings (admin view) ────────────────────────────────────────────────────
 
 export type AdminBookingItem = {

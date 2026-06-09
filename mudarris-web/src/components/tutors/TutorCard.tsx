@@ -16,24 +16,23 @@ export function TutorCard({ tutor, className }: TutorCardProps) {
   return (
     <div className={cn("card card-hover p-5 flex flex-col gap-4", className)}>
       {/* Header */}
-      <div className="flex items-start gap-3">
+      <div className="flex flex-col items-center gap-3">
         <Avatar
           src={tutor.avatar}
           name={tutor.displayName}
-          size="lg"
+          size="xl"
           verified={tutor.verified}
         />
-
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-1.5 flex-wrap">
-            <h3 className="text-headline-sm text-[var(--color-text-main)] truncate">
+        <div className="w-full text-center">
+          <div className="flex items-center justify-center gap-1.5 flex-wrap">
+            <h3 className="text-headline-sm text-[var(--color-text-main)]">
               {tutor.displayName}
             </h3>
             {tutor.verified && <VerifiedBadge />}
           </div>
 
           {/* Rating */}
-          <div className="flex items-center gap-1 mt-0.5">
+          <div className="flex items-center justify-center gap-1 mt-0.5">
             <Star className="w-3.5 h-3.5 fill-[var(--color-brand-gold)] text-[var(--color-brand-gold)]" />
             <span className="text-label-md font-semibold text-[var(--color-text-main)]">
               {tutor.rating.toFixed(1)}
@@ -43,18 +42,16 @@ export function TutorCard({ tutor, className }: TutorCardProps) {
             </span>
           </div>
 
-          {/* Teaching mode */}
-          <div className="mt-1">
+          <div className="flex items-center justify-between gap-2 mt-1.5">
             <TeachingModeBadge mode={tutor.teachingMode} />
+            {/* Price */}
+            <div className="text-left shrink-0">
+              <p className="text-headline-sm text-[var(--color-brand-primary)] font-bold">
+                {formatQAR(tutor.hourlyPrice)}
+              </p>
+              <p className="text-[10px] text-[var(--color-text-muted)]">/ ساعة</p>
+            </div>
           </div>
-        </div>
-
-        {/* Price */}
-        <div className="text-left shrink-0">
-          <p className="text-headline-sm text-[var(--color-brand-primary)] font-bold">
-            {formatQAR(tutor.hourlyPrice)}
-          </p>
-          <p className="text-[10px] text-[var(--color-text-muted)]">/ ساعة</p>
         </div>
       </div>
 

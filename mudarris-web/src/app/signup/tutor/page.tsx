@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import Link from "next/link";
-import { BookOpen, Check, Plus, X } from "lucide-react";
+import { BookOpen, Camera, Check, Plus, X } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 import { Textarea } from "@/components/ui/Textarea";
@@ -35,10 +35,12 @@ export default function TutorSignupPage() {
     curriculum: [] as string[], documents: [] as File[],
   });
 
+  const [docAvatarPhoto, setDocAvatarPhoto]   = useState<File | null>(null);
   const [docNationalId, setDocNationalId]     = useState<File | null>(null);
   const [docAcademicCert, setDocAcademicCert] = useState<File | null>(null);
   const [additionalCerts, setAdditionalCerts] = useState<CertSlot[]>([]);
 
+  const refAvatarPhoto  = useRef<HTMLInputElement>(null);
   const refNationalId   = useRef<HTMLInputElement>(null);
   const refAcademicCert = useRef<HTMLInputElement>(null);
   const additionalCertRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -95,6 +97,7 @@ export default function TutorSignupPage() {
     fd.append("areas", form.areas.join(","));
 
     if (docNationalId)   fd.append("doc_national_id", docNationalId);
+    if (docAvatarPhoto)   fd.append("doc_avatar", docAvatarPhoto);
     if (docAcademicCert) fd.append("doc_academic_certificate", docAcademicCert);
 
     additionalCerts.forEach((cert, index) => {
@@ -201,6 +204,49 @@ export default function TutorSignupPage() {
                 {step === 1 && (
                   <>
                     <h2 className="text-headline-sm mb-1">المعلومات الشخصية</h2>
+
+                    {/* Avatar photo upload */}
+                    <div className="flex flex-col items-center gap-2">
+                      <div
+                        className="w-24 h-24 rounded-full border-2 border-dashed border-[var(--color-outline-soft)] hover:border-[var(--color-brand-primary)] transition-colors cursor-pointer overflow-hidden flex items-center justify-center bg-[var(--color-surface-low)]"
+                        onClick={() => refAvatarPhoto.current?.click()}
+                      >
+                        {docAvatarPhoto ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={URL.createObjectURL(docAvatarPhoto)}
+                            alt="معاينة الصورة"
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="flex flex-col items-center gap-1 text-[var(--color-text-muted)]">
+                            <Camera className="w-7 h-7" />
+                            <span className="text-[10px]">صورة شخصية</span>
+                          </div>
+                        )}
+                      </div>
+                      <input
+                        ref={refAvatarPhoto}
+                        type="file"
+                        className="hidden"
+                        accept=".jpg,.jpeg,.png,.webp"
+                        onChange={(e) => setDocAvatarPhoto(e.target.files?.[0] ?? null)}
+                      />
+                      <p className="text-label-sm text-[var(--color-text-muted)]">
+                        {docAvatarPhoto ? (
+                          <button
+                            type="button"
+                            className="text-[var(--color-brand-primary)] hover:underline"
+                            onClick={() => refAvatarPhoto.current?.click()}
+                          >
+                            تغيير الصورة
+                          </button>
+                        ) : (
+                          "صورة شخصية للملف (اختياري)"
+                        )}
+                      </p>
+                    </div>
+
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <Input label="الاسم الكامل (سري)" type="text" value={form.fullName} onChange={(e) => update("fullName", e.target.value)} placeholder="الاسم الحقيقي كاملاً" required />
                       <Input label="الاسم المعروض للطلاب" type="text" value={form.displayName} onChange={(e) => update("displayName", e.target.value)} placeholder="د. محمد أو أ. سارة" required />
