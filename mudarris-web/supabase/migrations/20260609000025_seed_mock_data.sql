@@ -32,6 +32,12 @@ WHERE id IN (
   'a1000000-0000-0000-0000-000000000005'
 );
 
+UPDATE users SET avatar_url = 'https://randomuser.me/api/portraits/men/32.jpg'   WHERE id = 'a1000000-0000-0000-0000-000000000001';
+UPDATE users SET avatar_url = 'https://randomuser.me/api/portraits/women/44.jpg' WHERE id = 'a1000000-0000-0000-0000-000000000002';
+UPDATE users SET avatar_url = 'https://randomuser.me/api/portraits/men/67.jpg'   WHERE id = 'a1000000-0000-0000-0000-000000000003';
+UPDATE users SET avatar_url = 'https://randomuser.me/api/portraits/women/23.jpg' WHERE id = 'a1000000-0000-0000-0000-000000000004';
+UPDATE users SET avatar_url = 'https://randomuser.me/api/portraits/men/15.jpg'   WHERE id = 'a1000000-0000-0000-0000-000000000005';
+
 -- ─── Tutor profiles ───────────────────────────────────────────────────────────
 
 INSERT INTO tutors (id, status, is_visible, display_name_ar, bio_ar, subjects, grade_levels, teaching_modes, areas, hourly_rate, years_experience)

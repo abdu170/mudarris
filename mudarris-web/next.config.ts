@@ -60,7 +60,7 @@ const nextConfig: NextConfig = {
     ];
   },
 
-  // Images from Supabase Storage (avatars, public assets)
+  // Images from Supabase Storage (avatars, public assets) + randomuser.me for mock data
   images: {
     remotePatterns: [
       {
@@ -70,6 +70,10 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "*.supabase.in",
+      },
+      {
+        protocol: "https",
+        hostname: "randomuser.me",
       },
     ],
   },
