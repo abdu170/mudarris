@@ -27,6 +27,14 @@ export type TutorProfile = TutorListItem & {
   curriculum: string[];
 };
 
+export type TutorReview = {
+  id: string;
+  studentName: string;
+  rating: number;
+  comment: string | null;
+  createdAt: string;
+};
+
 // ─── Derive display teaching mode ───────────────────────────────────────────
 
 function derivePrimaryMode(modes: string[]): "online" | "in-person" | "both" {
@@ -114,6 +122,44 @@ export async function getTutorsAction(
     : items;
 
   return { data: filtered };
+}
+
+// ─── Get tutor reviews ──────────────────────────────────────────────────────
+
+export async function getTutorReviewsAction(
+  tutorId: string,
+): Promise<ActionResult<TutorReview[]>> {
+  const admin = createAdminClient();
+
+  const { data, error } = await admin
+    .from("reviews")
+    .select(`
+      id,
+      rating,
+      comment_ar,
+      created_at,
+      students!reviews_student_id_fkey (
+        users!students_id_fkey ( full_name_ar )
+      )
+    `)
+    .eq("tutor_id", tutorId)
+    .eq("is_visible", true)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("[getTutorReviews]", error.message);
+    return { error: "تعذّر تحميل التقييمات" };
+  }
+
+  const reviews: TutorReview[] = (data ?? []).map((r: any) => ({
+    id: r.id,
+    studentName: r.students?.users?.full_name_ar ?? "طالب",
+    rating: r.rating,
+    comment: r.comment_ar ?? null,
+    createdAt: r.created_at,
+  }));
+
+  return { data: reviews };
 }
 
 // ─── Get single tutor profile ───────────────────────────────────────────────

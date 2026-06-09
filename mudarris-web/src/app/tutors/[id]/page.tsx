@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { Star, MapPin, Clock, Award, MessageSquare } from "lucide-react";
 import { formatQAR } from "@/lib/utils";
 import { WeeklyCalendar } from "@/components/booking/WeeklyCalendar";
-import { getTutorProfileAction } from "@/lib/actions/tutors";
+import { getTutorProfileAction, getTutorReviewsAction } from "@/lib/actions/tutors";
 import type { Metadata } from "next";
 
 interface Props {
@@ -24,18 +24,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-const MOCK_REVIEWS = [
-  { id: "r1", studentName: "سلمى الجبر", rating: 5, comment: "مدرس ممتاز، شرح واضح ومبسط، استفدت كثيراً.", date: "مايو ٢٠٢٦" },
-  { id: "r2", studentName: "عمر الشمري", rating: 5, comment: "أسلوب تدريس احترافي جداً وصبور مع الطلاب.", date: "أبريل ٢٠٢٦" },
-  { id: "r3", studentName: "ليلى المنصور", rating: 4, comment: "شرح جيد وواضح، أنصح به بشدة.", date: "مارس ٢٠٢٦" },
-];
+function formatDateAr(iso: string) {
+  return new Intl.DateTimeFormat("ar-QA", { year: "numeric", month: "long" }).format(new Date(iso));
+}
 
 export default async function TutorProfilePage({ params }: Props) {
   const { id } = await params;
-  const res = await getTutorProfileAction(id);
+  const [res, reviewsRes] = await Promise.all([
+    getTutorProfileAction(id),
+    getTutorReviewsAction(id),
+  ]);
 
   if (!res.data) notFound();
   const tutor = res.data;
+  const reviews = reviewsRes.data ?? [];
 
   return (
     <>
@@ -140,8 +142,8 @@ export default async function TutorProfilePage({ params }: Props) {
                 </div>
               </div>
 
-              {/* Reviews (mock until Phase 5) */}
-              {tutor.reviewCount > 0 && (
+              {/* Reviews */}
+              {reviews.length > 0 && (
                 <div className="card p-6">
                   <div className="flex items-center justify-between mb-4">
                     <h2 className="text-headline-sm">تقييمات الطلاب</h2>
@@ -153,13 +155,13 @@ export default async function TutorProfilePage({ params }: Props) {
                   </div>
 
                   <div className="flex flex-col gap-4">
-                    {MOCK_REVIEWS.map((review) => (
+                    {reviews.map((review) => (
                       <div key={review.id} className="flex gap-3 pb-4 border-b border-[var(--color-outline-soft)] last:border-0 last:pb-0">
                         <Avatar name={review.studentName} size="sm" />
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-1">
                             <p className="text-label-md font-semibold">{review.studentName}</p>
-                            <p className="text-label-sm text-[var(--color-text-muted)]">{review.date}</p>
+                            <p className="text-label-sm text-[var(--color-text-muted)]">{formatDateAr(review.createdAt)}</p>
                           </div>
                           <div className="flex gap-0.5 mb-1">
                             {Array.from({ length: 5 }).map((_, i) => (
@@ -169,7 +171,9 @@ export default async function TutorProfilePage({ params }: Props) {
                               />
                             ))}
                           </div>
-                          <p className="text-body-md text-[var(--color-text-muted)]">{review.comment}</p>
+                          {review.comment && (
+                            <p className="text-body-md text-[var(--color-text-muted)]">{review.comment}</p>
+                          )}
                         </div>
                       </div>
                     ))}
