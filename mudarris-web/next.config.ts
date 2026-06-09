@@ -28,8 +28,8 @@ const securityHeaders = [
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       // Google Fonts
       "font-src 'self' https://fonts.gstatic.com",
-      // Supabase storage for avatars + tutor docs (served from project URL)
-      "img-src 'self' data: blob: https://*.supabase.co https://*.supabase.in",
+      // Supabase storage for avatars + tutor docs + randomuser.me for mock data
+      "img-src 'self' data: blob: https://*.supabase.co https://*.supabase.in https://randomuser.me",
       // Supabase API + Realtime WSS + Tap API (for future inline Tap SDK if needed)
       "connect-src 'self' https://*.supabase.co https://*.supabase.in wss://*.supabase.co wss://*.supabase.in https://api.tap.company",
       // No iframes allowed
