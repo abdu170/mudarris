@@ -22,16 +22,16 @@ const securityHeaders = [
     key: "Content-Security-Policy",
     value: [
       "default-src 'self'",
-      // Next.js inline scripts + client-side hydration
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+      // Next.js inline scripts + client-side hydration + PostHog session recording recorder
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://us-assets.i.posthog.com",
       // Tailwind CSS v4 + inline styles from React
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       // Google Fonts
       "font-src 'self' https://fonts.gstatic.com",
       // Supabase storage for avatars + tutor docs + randomuser.me for mock data
       "img-src 'self' data: blob: https://*.supabase.co https://*.supabase.in https://randomuser.me",
-      // Supabase API + Realtime WSS + Tap API (for future inline Tap SDK if needed)
-      "connect-src 'self' https://*.supabase.co https://*.supabase.in wss://*.supabase.co wss://*.supabase.in https://api.tap.company",
+      // Supabase API + Realtime WSS + Tap API + PostHog analytics/session recording/error tracking
+      "connect-src 'self' https://*.supabase.co https://*.supabase.in wss://*.supabase.co wss://*.supabase.in https://api.tap.company https://us.i.posthog.com https://us-assets.i.posthog.com",
       // No iframes allowed
       "frame-src 'none'",
       "frame-ancestors 'none'",

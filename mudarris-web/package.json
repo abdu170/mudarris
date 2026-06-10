@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:routes": "bash scripts/test-route-protection.sh",
+    "test:rate-limits": "bash scripts/test-rate-limits.sh"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.3",
@@ -16,6 +18,7 @@
     "clsx": "^2.1.1",
     "lucide-react": "^1.16.0",
     "next": "16.2.6",
+    "posthog-js": "^1.384.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "resend": "^6.12.4",

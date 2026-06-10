@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Cairo, Tajawal, Inter } from "next/font/google";
 import "./globals.css";
 import { ToastProvider } from "@/components/ui/Toast";
+import { PostHogProvider } from "@/providers/PostHogProvider";
 
 const cairo = Cairo({
   variable: "--font-cairo",
@@ -51,8 +52,10 @@ export default function RootLayout({
       className={`${cairo.variable} ${tajawal.variable} ${inter.variable} h-full`}
     >
       <body className="min-h-full bg-[var(--color-brand-cream)] text-[var(--color-text-main)] antialiased">
-        {children}
-        <ToastProvider />
+        <PostHogProvider>
+          {children}
+          <ToastProvider />
+        </PostHogProvider>
       </body>
     </html>
   );

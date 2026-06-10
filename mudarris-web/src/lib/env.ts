@@ -7,6 +7,10 @@ const publicSchema = z.object({
   NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1, "NEXT_PUBLIC_SUPABASE_ANON_KEY is required"),
   NEXT_PUBLIC_APP_URL: z.string().url("NEXT_PUBLIC_APP_URL must be a valid URL"),
   NEXT_PUBLIC_APP_ENV: z.enum(appEnvValues).default("local"),
+
+  // PostHog analytics — optional so the app still runs without it configured
+  NEXT_PUBLIC_POSTHOG_KEY: z.string().optional(),
+  NEXT_PUBLIC_POSTHOG_HOST: z.string().url().optional(),
 });
 
 const serverSchema = z.object({
@@ -29,6 +33,8 @@ const serverSchema = z.object({
   // AI-ready: Gemini API key (optional — not used until AI phase is approved)
   GEMINI_API_KEY: z.string().optional(),
 
+  // Rate limiting (src/lib/security/rate-limit.ts). Optional so local dev
+  // works without Redis, but REQUIRED in production — see docs/RATE_LIMITING.md.
   UPSTASH_REDIS_REST_URL: z.string().optional(),
   UPSTASH_REDIS_REST_TOKEN: z.string().optional(),
 });
@@ -39,6 +45,8 @@ function validatePublicEnv() {
     NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_APP_ENV: process.env.NEXT_PUBLIC_APP_ENV,
+    NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,
+    NEXT_PUBLIC_POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST,
   });
 
   if (!result.success) {

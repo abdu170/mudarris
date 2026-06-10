@@ -24,6 +24,8 @@
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | ✅ | `eyJ...` | Anon/public key from Supabase |
 | `NEXT_PUBLIC_APP_URL` | ✅ | `http://localhost:3000` | Full URL including protocol, no trailing slash |
 | `NEXT_PUBLIC_APP_ENV` | ✅ | `local` / `staging` / `production` | Controls env-specific behavior |
+| `NEXT_PUBLIC_POSTHOG_KEY` | Optional | `phc_...` | PostHog project API key. Analytics/session recording/error tracking disabled if unset. |
+| `NEXT_PUBLIC_POSTHOG_HOST` | Optional | `https://us.i.posthog.com` | PostHog ingestion host. |
 
 ### Server-Only Variables (never in client bundle)
 
