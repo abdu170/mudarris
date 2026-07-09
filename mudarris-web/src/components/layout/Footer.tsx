@@ -26,7 +26,7 @@ export function Footer() {
           {/* Brand */}
           <div className="flex flex-col gap-3">
             <Link href="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-[var(--radius-sm)] bg-[var(--color-brand-primary)] flex items-center justify-center">
+              <div className="w-8 h-8 rounded-[var(--radius-md)] bg-[var(--color-brand-primary)] shadow-[var(--shadow-btn)] flex items-center justify-center">
                 <BookOpen className="w-4 h-4 text-white" />
               </div>
               <span className="text-headline-sm text-[var(--color-brand-primary)] font-bold">

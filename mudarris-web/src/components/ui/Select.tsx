@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { forwardRef } from "react";
+import { forwardRef, useId } from "react";
 import { ChevronDown, AlertCircle } from "lucide-react";
 
 interface SelectOption {
@@ -17,7 +17,8 @@ interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
 
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(
   ({ label, options, placeholder, error, fullWidth = true, className, id, ...props }, ref) => {
-    const selectId = id || label;
+    const generatedId = useId();
+    const selectId = id || generatedId;
 
     return (
       <div className={cn("flex flex-col gap-1.5", fullWidth && "w-full")}>
@@ -38,13 +39,14 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             ref={ref}
             id={selectId}
             className={cn(
-              "w-full h-11 px-3 pl-8 rounded-[var(--radius-sm)] appearance-none",
-              "bg-[var(--color-surface-low)] border border-[var(--color-outline-soft)]",
+              "w-full h-11 px-3.5 pl-9 rounded-[var(--radius-md)] appearance-none",
+              "bg-white border border-[var(--color-outline-soft)] shadow-[var(--shadow-xs)]",
               "text-body-md text-[var(--color-text-main)]",
               "transition-all duration-150 cursor-pointer",
-              "focus:outline-none focus:border-[var(--color-brand-primary)] focus:ring-1 focus:ring-[var(--color-brand-primary)]",
-              error && "border-[var(--color-error)] focus:ring-[var(--color-error)]",
-              props.disabled && "opacity-50 cursor-not-allowed",
+              "hover:border-[var(--color-outline)]",
+              "focus:outline-none focus:border-[var(--color-brand-primary)] focus:ring-2 focus:ring-[var(--color-brand-primary)]/15",
+              error && "border-[var(--color-error)] focus:ring-[var(--color-error)]/15",
+              props.disabled && "opacity-60 cursor-not-allowed shadow-none",
               className
             )}
             {...props}

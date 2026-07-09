@@ -17,19 +17,19 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    "bg-[var(--color-brand-primary)] text-white hover:bg-[var(--color-brand-container)] active:scale-[0.98]",
+    "bg-[var(--color-brand-primary)] text-white shadow-[var(--shadow-btn)] hover:bg-[var(--color-brand-container)] hover:shadow-[var(--shadow-card-hover)] active:scale-[0.98] active:shadow-[var(--shadow-xs)]",
   secondary:
-    "bg-transparent border border-[var(--color-brand-primary)] text-[var(--color-brand-primary)] hover:bg-[var(--color-surface-low)] active:scale-[0.98]",
+    "bg-white border border-[var(--color-brand-primary)]/35 text-[var(--color-brand-primary)] shadow-[var(--shadow-xs)] hover:border-[var(--color-brand-primary)] hover:bg-[var(--color-brand-primary)]/5 active:scale-[0.98]",
   ghost:
-    "bg-transparent text-[var(--color-brand-primary)] hover:bg-[var(--color-surface-low)] active:scale-[0.98]",
+    "bg-transparent text-[var(--color-brand-primary)] hover:bg-[var(--color-brand-primary)]/10 active:scale-[0.98]",
   danger:
-    "bg-[var(--color-error)] text-white hover:opacity-90 active:scale-[0.98]",
+    "bg-[var(--color-error)] text-white shadow-[var(--shadow-xs)] hover:opacity-90 active:scale-[0.98]",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
-  sm: "h-8 px-3 text-sm rounded-[var(--radius-sm)]",
-  md: "h-10 px-5 text-base rounded-[var(--radius-sm)]",
-  lg: "h-12 px-7 text-lg rounded-[var(--radius-sm)]",
+  sm: "h-9 px-4 text-sm rounded-[var(--radius-sm)]",
+  md: "h-11 px-5 text-base rounded-[var(--radius-md)]",
+  lg: "h-12 px-7 text-lg rounded-[var(--radius-md)]",
 };
 
 export function Button({
@@ -46,12 +46,12 @@ export function Button({
   const isDisabled = disabled || loading;
 
   const classes = cn(
-    "inline-flex items-center justify-center gap-2 font-medium transition-all duration-150 select-none",
+    "inline-flex items-center justify-center gap-2 font-semibold transition-all duration-150 select-none whitespace-nowrap",
     "focus-visible:outline-2 focus-visible:outline-[var(--color-brand-primary)] focus-visible:outline-offset-2",
     variantStyles[variant],
     sizeStyles[size],
     fullWidth && "w-full",
-    isDisabled && "opacity-50 cursor-not-allowed pointer-events-none",
+    isDisabled && "opacity-60 cursor-not-allowed pointer-events-none shadow-none",
     className
   );
 

@@ -14,7 +14,7 @@ function StatCard({ icon, label, value, sub, href }: {
   return (
     <div className="card p-5 flex flex-col gap-3">
       <div className="flex items-center justify-between">
-        <div className="w-10 h-10 rounded-[var(--radius-md)] bg-[var(--color-brand-primary)] bg-opacity-10 text-[var(--color-brand-primary)] flex items-center justify-center">
+        <div className="w-10 h-10 rounded-[var(--radius-md)] bg-[var(--color-brand-primary)]/10 text-[var(--color-brand-primary)] flex items-center justify-center">
           {icon}
         </div>
         {href && (

@@ -48,13 +48,13 @@ export function HowItWorksSection() {
                 <div className="hidden lg:block absolute top-8 left-0 w-full h-px bg-[var(--color-outline-soft)] z-0" />
               )}
 
-              <div className="relative z-10 flex flex-col items-start gap-4 p-5 bg-white rounded-[var(--radius-lg)] border border-[var(--color-outline-soft)]">
+              <div className="relative z-10 flex flex-col items-start gap-4 p-6 h-full bg-white rounded-[var(--radius-lg)] border border-[var(--color-outline-soft)]/60 shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-1 transition-all duration-200">
                 {/* Step number + icon */}
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-[var(--radius-md)] bg-[var(--color-brand-primary)] text-white flex items-center justify-center">
+                <div className="flex items-center gap-3 w-full">
+                  <div className="w-12 h-12 rounded-[var(--radius-md)] bg-[var(--color-brand-primary)] text-white shadow-[var(--shadow-btn)] flex items-center justify-center">
                     {step.icon}
                   </div>
-                  <span className="text-display text-[var(--color-outline-soft)] font-bold leading-none select-none">
+                  <span className="text-display text-[var(--color-brand-primary)]/10 font-bold leading-none select-none mr-auto" aria-hidden="true">
                     {step.step}
                   </span>
                 </div>

@@ -60,7 +60,7 @@ export default async function TutorPendingPage() {
             </>
           ) : (
             <>
-              <div className="w-16 h-16 rounded-full bg-[var(--color-brand-primary)] bg-opacity-10 flex items-center justify-center">
+              <div className="w-16 h-16 rounded-full bg-[var(--color-brand-primary)]/10 flex items-center justify-center">
                 <Clock className="w-8 h-8 text-[var(--color-brand-primary)]" />
               </div>
               <div>

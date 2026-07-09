@@ -25,9 +25,11 @@ export async function FeaturedTutorsSection() {
         </div>
 
         {featured.length === 0 ? (
-          <p className="text-body-md text-[var(--color-text-muted)] text-center py-8">
-            لا يوجد مدرسون معتمدون حالياً
-          </p>
+          <div className="card py-12 text-center">
+            <p className="text-body-md text-[var(--color-text-muted)]">
+              لا يوجد مدرسون معتمدون حالياً — عد قريباً
+            </p>
+          </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {featured.map((tutor) => (

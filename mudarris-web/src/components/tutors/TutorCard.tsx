@@ -14,19 +14,19 @@ interface TutorCardProps {
 
 export function TutorCard({ tutor, className }: TutorCardProps) {
   return (
-    <div className={cn("card card-hover flex flex-col overflow-hidden", className)}>
+    <div className={cn("card card-hover flex flex-col overflow-hidden group", className)}>
       {/* Full-width photo */}
-      <div className="relative h-48 shrink-0 bg-[var(--color-surface-high)]">
+      <div className="relative h-48 shrink-0 bg-[var(--color-surface-high)] overflow-hidden">
         {tutor.avatar ? (
           <Image
             src={tutor.avatar}
             alt={tutor.displayName}
             fill
-            className="object-cover"
+            className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-4xl font-bold text-[var(--color-text-muted)]">
+          <div className="w-full h-full flex items-center justify-center text-4xl font-bold text-[var(--color-text-muted)] bg-gradient-to-b from-[var(--color-surface-low)] to-[var(--color-surface-high)]">
             {getInitials(tutor.displayName)}
           </div>
         )}
@@ -66,13 +66,13 @@ export function TutorCard({ tutor, className }: TutorCardProps) {
         </div>
 
         {/* Price + teaching mode */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between pt-2 border-t border-[var(--color-outline-soft)]/40">
           <TeachingModeBadge mode={tutor.teachingMode} />
           <div className="text-left">
             <p className="text-headline-sm text-[var(--color-brand-primary)] font-bold leading-tight">
               {formatQAR(tutor.hourlyPrice)}
             </p>
-            <p className="text-[10px] text-[var(--color-text-muted)]">/ ساعة</p>
+            <p className="text-[11px] text-[var(--color-text-muted)]">للحصة الواحدة</p>
           </div>
         </div>
 

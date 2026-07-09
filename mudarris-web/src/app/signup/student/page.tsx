@@ -69,7 +69,7 @@ export default function StudentSignupPage() {
         <div className="card p-8">
           {emailSent ? (
             <div className="flex flex-col items-center gap-4 text-center py-4">
-              <div className="w-14 h-14 rounded-full bg-[var(--color-brand-primary)] bg-opacity-10 flex items-center justify-center">
+              <div className="w-14 h-14 rounded-full bg-[var(--color-brand-primary)]/10 flex items-center justify-center">
                 <BookOpen className="w-7 h-7 text-[var(--color-brand-primary)]" />
               </div>
               <h2 className="text-headline-sm text-[var(--color-text-main)]">تحقق من بريدك الإلكتروني</h2>

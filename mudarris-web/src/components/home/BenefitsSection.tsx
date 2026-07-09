@@ -52,9 +52,9 @@ export function BenefitsSection() {
           {benefits.map((b) => (
             <div
               key={b.title}
-              className="flex gap-4 p-5 bg-white rounded-[var(--radius-lg)] border border-[var(--color-outline-soft)] hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-0.5 transition-all duration-150"
+              className="flex gap-4 p-6 bg-white rounded-[var(--radius-lg)] border border-[var(--color-outline-soft)]/60 shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-1 transition-all duration-200"
             >
-              <div className="w-11 h-11 rounded-[var(--radius-md)] bg-[var(--color-brand-primary)] bg-opacity-10 text-[var(--color-brand-primary)] flex items-center justify-center shrink-0">
+              <div className="w-11 h-11 rounded-[var(--radius-md)] bg-[var(--color-brand-primary)]/10 text-[var(--color-brand-primary)] flex items-center justify-center shrink-0">
                 {b.icon}
               </div>
               <div>

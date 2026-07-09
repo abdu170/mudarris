@@ -35,7 +35,7 @@ export default async function TutorDashboardPage() {
             key={card.label}
             className={`card p-5 flex flex-col gap-3 ${card.urgent ? "border-[var(--color-warning)] bg-[var(--color-warning-container)]" : ""}`}
           >
-            <div className="w-10 h-10 rounded-[var(--radius-md)] bg-[var(--color-brand-primary)] bg-opacity-10 text-[var(--color-brand-primary)] flex items-center justify-center">
+            <div className="w-10 h-10 rounded-[var(--radius-md)] bg-[var(--color-brand-primary)]/10 text-[var(--color-brand-primary)] flex items-center justify-center">
               {card.icon}
             </div>
             <div>

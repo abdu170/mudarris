@@ -26,17 +26,17 @@ export function EmptyState({
       )}
     >
       {icon && (
-        <div className="w-16 h-16 rounded-full bg-[var(--color-surface-high)] flex items-center justify-center text-[var(--color-text-muted)] text-2xl">
+        <div className="w-16 h-16 rounded-2xl bg-[var(--color-brand-primary)]/5 border border-[var(--color-brand-primary)]/10 flex items-center justify-center text-[var(--color-brand-primary)] text-2xl">
           {icon}
         </div>
       )}
 
       {/* Decorative geometric shape as fallback illustration */}
       {!icon && (
-        <div className="relative w-20 h-20 mx-auto">
-          <div className="absolute inset-0 rounded-2xl bg-[var(--color-surface-container)] rotate-6 opacity-60" />
-          <div className="absolute inset-2 rounded-xl bg-[var(--color-surface-high)]" />
-          <div className="absolute inset-0 flex items-center justify-center text-3xl text-[var(--color-text-muted)]">
+        <div className="relative w-20 h-20 mx-auto" aria-hidden="true">
+          <div className="absolute inset-0 rounded-2xl bg-[var(--color-brand-primary)]/5 rotate-6" />
+          <div className="absolute inset-2 rounded-xl bg-white border border-[var(--color-outline-soft)]/60 shadow-[var(--shadow-xs)]" />
+          <div className="absolute inset-0 flex items-center justify-center text-3xl">
             📋
           </div>
         </div>

@@ -122,7 +122,7 @@ export default async function TutorProfilePage({ params }: Props) {
                       <p className="text-label-md text-[var(--color-text-muted)] mb-2">المواد</p>
                       <div className="flex flex-wrap gap-2">
                         {tutor.subjects.map((s) => (
-                          <Chip key={s} className="bg-[var(--color-brand-primary)] bg-opacity-10 text-[var(--color-brand-primary)]">
+                          <Chip key={s} className="bg-[var(--color-brand-primary)]/10 border-[var(--color-brand-primary)]/15 text-[var(--color-brand-primary)]">
                             {s}
                           </Chip>
                         ))}

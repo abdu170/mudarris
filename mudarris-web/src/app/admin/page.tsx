@@ -46,7 +46,7 @@ export default async function AdminPage() {
               className={`card p-5 flex flex-col gap-3 ${card.urgent ? "border-[var(--color-warning)]" : ""}`}
             >
               <div className="flex items-center justify-between">
-                <div className={`w-9 h-9 rounded-[var(--radius-sm)] flex items-center justify-center ${card.urgent ? "bg-[var(--color-warning-container)] text-[var(--color-warning)]" : "bg-[var(--color-brand-primary)] bg-opacity-10 text-[var(--color-brand-primary)]"}`}>
+                <div className={`w-9 h-9 rounded-[var(--radius-sm)] flex items-center justify-center ${card.urgent ? "bg-[var(--color-warning-container)] text-[var(--color-warning)]" : "bg-[var(--color-brand-primary)]/10 text-[var(--color-brand-primary)]"}`}>
                   {card.icon}
                 </div>
                 {card.urgent && <AlertTriangle className="w-4 h-4 text-[var(--color-warning)]" />}

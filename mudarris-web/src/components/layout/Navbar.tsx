@@ -92,12 +92,12 @@ export function Navbar() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-40 bg-[var(--color-surface-white)] border-b border-[var(--color-outline-soft)] shadow-[var(--shadow-nav)]">
+    <header className="sticky top-0 z-40 bg-white/85 backdrop-blur-md border-b border-[var(--color-outline-soft)]/60 shadow-[var(--shadow-nav)]">
       <div className="container-page">
         <div className="flex items-center justify-between h-16">
           {/* Logo — right side in RTL */}
           <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-9 h-9 rounded-[var(--radius-sm)] bg-[var(--color-brand-primary)] flex items-center justify-center transition-transform group-hover:scale-105">
+            <div className="w-9 h-9 rounded-[var(--radius-md)] bg-[var(--color-brand-primary)] shadow-[var(--shadow-btn)] flex items-center justify-center transition-transform group-hover:scale-105">
               <BookOpen className="w-5 h-5 text-white" />
             </div>
             <span className="text-headline-sm text-[var(--color-brand-primary)] font-bold tracking-tight">
@@ -106,12 +106,12 @@ export function Navbar() {
           </Link>
 
           {/* Desktop nav — center */}
-          <nav className="hidden md:flex items-center gap-6">
+          <nav className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-label-md text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] transition-colors"
+                className="px-3 py-2 rounded-[var(--radius-sm)] text-label-md font-medium text-[var(--color-text-muted)] hover:text-[var(--color-brand-primary)] hover:bg-[var(--color-brand-primary)]/5 transition-colors"
               >
                 {link.label}
               </Link>

@@ -18,6 +18,28 @@ const STEPS = [
   { label: "الوثائق",          number: 4 },
 ];
 
+function CheckboxGroup({ items, selected, onToggle }: { items: string[]; selected: string[]; onToggle: (v: string) => void }) {
+  return (
+    <div className="flex flex-wrap gap-2">
+      {items.map((item) => (
+        <button
+          key={item}
+          type="button"
+          onClick={() => onToggle(item)}
+          className={cn(
+            "px-3 py-1.5 rounded-full text-label-sm border transition-all duration-150",
+            selected.includes(item)
+              ? "bg-[var(--color-brand-primary)] text-white border-[var(--color-brand-primary)]"
+              : "bg-white text-[var(--color-text-muted)] border-[var(--color-outline-soft)] hover:border-[var(--color-brand-primary)]"
+          )}
+        >
+          {item}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 interface CertSlot {
   id: number;
   file: File | null;
@@ -114,26 +136,6 @@ export default function TutorSignupPage() {
     }
   }
 
-  const CheckboxGroup = ({ items, selected, onToggle }: { items: string[]; selected: string[]; onToggle: (v: string) => void }) => (
-    <div className="flex flex-wrap gap-2">
-      {items.map((item) => (
-        <button
-          key={item}
-          type="button"
-          onClick={() => onToggle(item)}
-          className={cn(
-            "px-3 py-1.5 rounded-full text-label-sm border transition-all duration-150",
-            selected.includes(item)
-              ? "bg-[var(--color-brand-primary)] text-white border-[var(--color-brand-primary)]"
-              : "bg-white text-[var(--color-text-muted)] border-[var(--color-outline-soft)] hover:border-[var(--color-brand-primary)]"
-          )}
-        >
-          {item}
-        </button>
-      ))}
-    </div>
-  );
-
   return (
     <div className="min-h-screen bg-[var(--color-brand-cream)] py-10 px-4">
       <div className="max-w-2xl mx-auto">
@@ -158,7 +160,7 @@ export default function TutorSignupPage() {
                   className={cn(
                     "w-9 h-9 rounded-full flex items-center justify-center text-label-sm font-bold transition-all duration-200",
                     s.number < step  ? "bg-[var(--color-success)] text-white" :
-                    s.number === step ? "bg-[var(--color-brand-primary)] text-white ring-4 ring-[var(--color-brand-primary)] ring-opacity-20" :
+                    s.number === step ? "bg-[var(--color-brand-primary)] text-white ring-4 ring-[var(--color-brand-primary)]/20" :
                     "bg-[var(--color-surface-high)] text-[var(--color-text-muted)]"
                   )}
                 >
@@ -178,7 +180,7 @@ export default function TutorSignupPage() {
         <div className="card p-8">
           {emailSent ? (
             <div className="flex flex-col items-center gap-4 text-center py-4">
-              <div className="w-14 h-14 rounded-full bg-[var(--color-brand-primary)] bg-opacity-10 flex items-center justify-center">
+              <div className="w-14 h-14 rounded-full bg-[var(--color-brand-primary)]/10 flex items-center justify-center">
                 <BookOpen className="w-7 h-7 text-[var(--color-brand-primary)]" />
               </div>
               <h2 className="text-headline-sm text-[var(--color-text-main)]">تحقق من بريدك الإلكتروني</h2>

@@ -59,15 +59,20 @@ function SidebarNavItem({ item }: { item: NavItem }) {
   return (
     <Link
       href={item.href}
+      aria-current={isActive ? "page" : undefined}
       className={cn(
-        "flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-sm)] transition-all duration-150",
+        "relative flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-md)] transition-all duration-150",
         "text-label-md group",
         isActive
-          ? "bg-[var(--color-brand-primary)] text-white font-semibold"
+          ? "bg-[var(--color-brand-primary)]/10 text-[var(--color-brand-primary)] font-bold"
           : "text-[var(--color-text-muted)] hover:bg-[var(--color-surface-container)] hover:text-[var(--color-text-main)]"
       )}
     >
-      <span className={cn("shrink-0", isActive ? "text-white" : "text-[var(--color-text-muted)] group-hover:text-[var(--color-text-main)]")}>
+      {/* Active indicator bar — logical start edge (RTL-aware) */}
+      {isActive && (
+        <span className="absolute start-0 top-1/2 -translate-y-1/2 w-1 h-6 rounded-full bg-[var(--color-brand-primary)]" />
+      )}
+      <span className={cn("shrink-0", isActive ? "text-[var(--color-brand-primary)]" : "text-[var(--color-text-muted)] group-hover:text-[var(--color-text-main)]")}>
         {item.icon}
       </span>
       {item.label}
@@ -87,22 +92,22 @@ export function DashboardSidebar({ role, userName = "المستخدم" }: Dashbo
   return (
     <aside className="flex flex-col h-full bg-[var(--color-surface-white)] border-l border-[var(--color-outline-soft)] w-60 shrink-0">
       {/* Brand header */}
-      <div className="px-4 py-4 border-b border-[var(--color-outline-soft)]">
-        <Link href="/" className="flex items-center gap-2 mb-3">
-          <div className="w-7 h-7 rounded bg-[var(--color-brand-primary)] flex items-center justify-center">
+      <div className="px-4 py-4 border-b border-[var(--color-outline-soft)]/60">
+        <Link href="/" className="flex items-center gap-2 mb-4">
+          <div className="w-8 h-8 rounded-[var(--radius-sm)] bg-[var(--color-brand-primary)] shadow-[var(--shadow-btn)] flex items-center justify-center">
             <BookOpen className="w-4 h-4 text-white" />
           </div>
-          <span className="font-bold text-[var(--color-brand-primary)] text-sm">مُدرّس</span>
+          <span className="font-bold text-[var(--color-brand-primary)] text-base">مُدرّس</span>
         </Link>
 
         {/* User pill */}
-        <div className="flex items-center gap-2 px-2 py-1.5 rounded-[var(--radius-sm)] bg-[var(--color-surface-low)]">
-          <div className="w-7 h-7 rounded-full bg-[var(--color-brand-primary)] text-white flex items-center justify-center text-xs font-bold">
+        <div className="flex items-center gap-2.5 px-2.5 py-2 rounded-[var(--radius-md)] bg-[var(--color-surface-low)] border border-[var(--color-outline-soft)]/50">
+          <div className="w-8 h-8 rounded-full bg-[var(--color-brand-primary)] text-white flex items-center justify-center text-xs font-bold shrink-0">
             {userName[0]}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-[11px] font-semibold text-[var(--color-text-main)] truncate">{userName}</p>
-            <p className="text-[10px] text-[var(--color-text-muted)]">{label}</p>
+            <p className="text-[12px] font-semibold text-[var(--color-text-main)] truncate">{userName}</p>
+            <p className="text-[11px] text-[var(--color-text-muted)]">{label}</p>
           </div>
         </div>
       </div>
@@ -143,7 +148,7 @@ export function MobileNav({ role }: { role: "student" | "tutor" | "admin" }) {
   const mobileItems = nav.slice(0, 4);
 
   return (
-    <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-[var(--color-outline-soft)] safe-area-pb">
+    <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-[var(--color-outline-soft)]/60 shadow-[0_-4px_16px_rgba(27,28,26,0.06)] safe-area-pb">
       <div className="flex items-center justify-around h-16">
         {mobileItems.map((item) => {
           const isActive = pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href));
@@ -151,12 +156,18 @@ export function MobileNav({ role }: { role: "student" | "tutor" | "admin" }) {
             <Link
               key={item.href}
               href={item.href}
-              className="flex flex-col items-center gap-1 flex-1 py-2 transition-colors"
+              aria-current={isActive ? "page" : undefined}
+              className="flex flex-col items-center gap-1 flex-1 py-2 min-h-[44px] transition-colors"
             >
-              <span className={cn(isActive ? "text-[var(--color-brand-primary)]" : "text-[var(--color-text-muted)]")}>
+              <span
+                className={cn(
+                  "flex items-center justify-center px-3.5 py-0.5 rounded-full transition-colors",
+                  isActive ? "bg-[var(--color-brand-primary)]/10 text-[var(--color-brand-primary)]" : "text-[var(--color-text-muted)]"
+                )}
+              >
                 {item.icon}
               </span>
-              <span className={cn("text-[10px] font-medium", isActive ? "text-[var(--color-brand-primary)]" : "text-[var(--color-text-muted)]")}>
+              <span className={cn("text-[10px]", isActive ? "font-bold text-[var(--color-brand-primary)]" : "font-medium text-[var(--color-text-muted)]")}>
                 {item.label}
               </span>
             </Link>

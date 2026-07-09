@@ -81,8 +81,8 @@ export function Chip({ children, className }: ChipProps) {
     <span
       className={cn(
         "inline-flex items-center px-3 py-1 rounded-full",
-        "bg-[var(--color-surface-container)] text-[var(--color-text-muted)]",
-        "text-[12px] font-medium",
+        "bg-[var(--color-surface-low)] border border-[var(--color-outline-soft)]/60",
+        "text-[12px] font-medium text-[var(--color-text-muted)]",
         className
       )}
     >

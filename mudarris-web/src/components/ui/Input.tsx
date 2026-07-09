@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { forwardRef, useState } from "react";
+import { forwardRef, useId, useState } from "react";
 import { Eye, EyeOff, AlertCircle } from "lucide-react";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -12,9 +12,10 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ label, error, hint, fullWidth = true, className, type, id, ...props }, ref) => {
     const [showPassword, setShowPassword] = useState(false);
+    const generatedId = useId();
     const isPassword = type === "password";
     const inputType = isPassword && showPassword ? "text" : type;
-    const inputId = id || label;
+    const inputId = id || generatedId;
 
     return (
       <div className={cn("flex flex-col gap-1.5", fullWidth && "w-full")}>
@@ -36,13 +37,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             id={inputId}
             type={inputType}
             className={cn(
-              "w-full h-11 px-3 rounded-[var(--radius-sm)]",
-              "bg-[var(--color-surface-low)] border border-[var(--color-outline-soft)]",
-              "text-body-md text-[var(--color-text-main)] placeholder:text-[var(--color-text-muted)]",
+              "w-full h-11 px-3.5 rounded-[var(--radius-md)]",
+              "bg-white border border-[var(--color-outline-soft)] shadow-[var(--shadow-xs)]",
+              "text-body-md text-[var(--color-text-main)] placeholder:text-[var(--color-text-muted)]/70",
               "transition-all duration-150",
-              "focus:outline-none focus:border-[var(--color-brand-primary)] focus:ring-1 focus:ring-[var(--color-brand-primary)]",
-              error && "border-[var(--color-error)] focus:ring-[var(--color-error)] focus:border-[var(--color-error)]",
-              props.disabled && "opacity-50 cursor-not-allowed bg-[var(--color-surface-high)]",
+              "hover:border-[var(--color-outline)]",
+              "focus:outline-none focus:border-[var(--color-brand-primary)] focus:ring-2 focus:ring-[var(--color-brand-primary)]/15",
+              error && "border-[var(--color-error)] focus:ring-[var(--color-error)]/15 focus:border-[var(--color-error)]",
+              props.disabled && "opacity-60 cursor-not-allowed bg-[var(--color-surface-high)] shadow-none",
               isPassword && "pl-10",
               className
             )}
@@ -53,8 +55,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             <button
               type="button"
               onClick={() => setShowPassword((v) => !v)}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] transition-colors"
-              tabIndex={-1}
+              className="absolute left-3 top-1/2 -translate-y-1/2 p-0.5 rounded text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] transition-colors"
+              aria-label={showPassword ? "إخفاء كلمة المرور" : "إظهار كلمة المرور"}
             >
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>

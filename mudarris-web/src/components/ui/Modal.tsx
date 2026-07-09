@@ -56,7 +56,7 @@ export function Modal({ open, onClose, title, children, size = "md", persistent 
     >
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+        className="absolute inset-0 bg-[#1b1c1a]/50 backdrop-blur-sm"
         onClick={persistent ? undefined : onClose}
       />
 
@@ -65,7 +65,8 @@ export function Modal({ open, onClose, title, children, size = "md", persistent 
         ref={dialogRef}
         className={cn(
           "relative z-10 w-full bg-white shadow-[var(--shadow-modal)]",
-          "rounded-t-[var(--radius-xl)] sm:rounded-[var(--radius-lg)]",
+          "max-h-[90dvh] overflow-y-auto",
+          "rounded-t-[var(--radius-xl)] sm:rounded-[var(--radius-xl)]",
           "animate-[slide-up_0.2s_ease]",
           sizeStyles[size]
         )}
@@ -96,7 +97,7 @@ export function Modal({ open, onClose, title, children, size = "md", persistent 
         )}
 
         {/* Body */}
-        <div className="px-5 py-4">{children}</div>
+        <div className="px-5 py-5">{children}</div>
       </div>
 
       <style>{`

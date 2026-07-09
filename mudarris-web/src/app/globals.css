@@ -69,11 +69,13 @@
   --radius-xl:   1.5rem;     /* 24px */
   --radius-full: 9999px;
 
-  /* ── Shadow ─────────────────────────────────────────────── */
-  --shadow-card: 0 1px 3px rgba(128, 0, 32, 0.06), 0 1px 2px rgba(128, 0, 32, 0.04);
-  --shadow-card-hover: 0 4px 12px rgba(128, 0, 32, 0.10), 0 2px 4px rgba(128, 0, 32, 0.06);
-  --shadow-modal: 0 20px 40px rgba(0, 0, 0, 0.15);
-  --shadow-nav:   0 1px 0 rgba(0,0,0,0.06);
+  /* ── Shadow — soft, layered, premium ────────────────────── */
+  --shadow-xs:   0 1px 2px rgba(27, 28, 26, 0.05);
+  --shadow-card: 0 1px 2px rgba(27, 28, 26, 0.04), 0 2px 8px rgba(87, 0, 19, 0.05);
+  --shadow-card-hover: 0 4px 8px rgba(27, 28, 26, 0.05), 0 12px 28px rgba(87, 0, 19, 0.10);
+  --shadow-btn:  0 1px 2px rgba(87, 0, 19, 0.20), 0 2px 6px rgba(87, 0, 19, 0.12);
+  --shadow-modal: 0 24px 48px rgba(27, 28, 26, 0.18), 0 8px 16px rgba(27, 28, 26, 0.08);
+  --shadow-nav:   0 1px 0 rgba(27, 28, 26, 0.05);
 
   /* ── Aliases — fix undefined token references in legacy code ─ */
   --color-border:          #e0bfbf;   /* alias → --color-outline-soft */
@@ -142,6 +144,13 @@ input, textarea, select {
 :focus-visible {
   outline: 2px solid var(--color-brand-primary);
   outline-offset: 2px;
+  border-radius: var(--radius-xs);
+}
+
+/* Text selection */
+::selection {
+  background-color: var(--color-brand-primary);
+  color: #ffffff;
 }
 
 /* Scrollbar subtle */
@@ -223,17 +232,18 @@ input, textarea, select {
 
 .card {
   background-color: var(--color-surface-white);
-  border: 1px solid var(--color-outline-soft);
+  border: 1px solid rgba(224, 191, 191, 0.55); /* outline-soft, softened */
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
 }
 
 .card-hover {
-  transition: box-shadow 0.15s ease, transform 0.15s ease;
+  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
 }
 .card-hover:hover {
   box-shadow: var(--shadow-card-hover);
-  transform: translateY(-1px);
+  border-color: var(--color-outline-soft);
+  transform: translateY(-3px);
 }
 
 /* ============================================================
@@ -286,6 +296,30 @@ input, textarea, select {
 
 .transition-smooth {
   transition: all 0.15s ease;
+}
+
+/* ============================================================
+   Utility — Safe area (mobile bottom nav)
+   ============================================================ */
+
+.safe-area-pb {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* ============================================================
+   Utility — Brand surfaces
+   ============================================================ */
+
+/* Deep-brand section background (CTA bands, hero accents) */
+.surface-brand-deep {
+  background:
+    radial-gradient(80% 120% at 85% 0%, rgba(254, 212, 136, 0.10) 0%, transparent 55%),
+    linear-gradient(135deg, #570013 0%, #6d0a20 55%, #800020 100%);
+}
+
+/* Subtle top divider used between page sections */
+.section-divider {
+  border-top: 1px solid rgba(224, 191, 191, 0.4);
 }
 
 /* ============================================================
